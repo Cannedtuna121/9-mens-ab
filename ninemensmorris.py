@@ -38,7 +38,7 @@ class NineMensMorris:
 
             # Finding all possible moves
             valid_moves = [] # Array of valid states
-            if (phase == 1): # Placing One
+            if (phase == 1): # Placing Phase
                 for i in range(3):
                     for j in range(8):
                         if (self.board[i][j] == 0): # Empty space
@@ -47,8 +47,19 @@ class NineMensMorris:
                             else:
                                 valid_moves.append(self.move(None, (i, j), None)) # Add non-mill state
             elif(phase == 2): # Sliding Phase
-                print("Unimplemented")
-            else: # Jumpinh phase
+                for i in range(3):
+                    for j in range(8):
+                        if (self.board[i][j] == current_player): # Previously filled space
+                            for direction in ['u', 'd', 'l', 'r']:
+                                new = self.newSlidePosition((i, j), direction)
+                                if (new == None or self.board[new[0]][new[1]] != 0): # Make sure move is valid and has an empty space
+                                    continue
+
+                                if (self.isMill((i, j), new)): # check if moving there creates a mill
+                                    self.expandMillMove((i, j), new, current_player, valid_moves)
+                                else:
+                                    valid_moves.append(self.move((i, j), new, None)) # Add non-mill state
+            else: # Jumping phase
                 for i in range(3):
                     for j in range(8):
                         if (self.board[i][j] == current_player): # Previously filled space
@@ -61,7 +72,73 @@ class NineMensMorris:
                                             valid_moves.append(self.move((i, j), (ii, jj), None)) # Add non-mill state
                                             
             return valid_moves # Return the possible moves
-   
+
+    # Helper function that determins the new position of a peice after a slide in a direction
+    def newSlidePosition(self, prev, slide):
+        if (prev == None):
+            return None
+
+        pb = prev[0]
+        pl = prev[1]
+
+        # Possible up moves
+        if (slide == 'u'):
+           if (pl == 3 or pl == 4):
+              return (pb, pl -1)
+           elif (pl == 6):
+               return (pb, 7)
+           elif (pl == 7):
+               return (pb, 0)
+           elif (pl == 1):
+               if (pb != 0):
+                   return (pb - 1, pl)
+           elif (pl == 5):
+               if (pb != 2):
+                   return (pb + 1, pl)
+
+        # Possible down moves
+        elif (slide == 'd'):
+            if (pl == 2 or pl == 3):
+                return (pb, pl + 1)
+            elif (pl == 0):
+                return (pb, 7)
+            elif (pl == 7):
+                return (pb, 6)
+            elif (pl == 1):
+                if (pb != 2):
+                    return (pb + 1, pl)
+            elif (pl == 5):
+                if (pb != 0):
+                    return (pb - 1, pl)
+
+        # Possible left moves
+        elif (slide == 'l'):
+            if (pl == 1 or pl == 2):
+                return (pb, pl - 1)
+            elif (pl == 4 or pl == 5):
+                return (pb, pl + 1)
+            elif (pl == 3):
+                if (pb != 2):
+                    return (pb + 1, pl)
+            elif (pl == 7):
+                if (pb != 0):
+                    return (pb - 1, pl)
+
+        # Possible right moves
+        elif (slide == 'r'):
+            if (pl == 0 or pl == 1):
+                return (pb, pl + 1)
+            elif (pl == 5 or pl == 6):
+                return (pb, pl - 1)
+            elif (pl == 3):
+                if (pb != 0):
+                    return (pb - 1, pl)
+            elif (pl == 7):
+                if (pb != 2):
+                    return (pb + 1, pl)
+
+        return None
+
     # Helper function that expands moves that require a player to remove an enemy peice 
     def expandMillMove(self, prev, new, current_player, valid_moves):
         opponent_peices_in_mill = []
@@ -74,9 +151,11 @@ class NineMensMorris:
                         valid_moves.append(self.move(prev, new, (i, j)))
                         found_non_mill = True
                     elif (not found_non_mill):
+                        # If we have not found a peice outside of a mill, put keep track of peices in mills
                         opponent_peices_in_mill.append((i, j))
         if (not found_non_mill):
             for m in opponent_peices_in_mill:
+                # If there are only peices that are part of a mill, make moves that remove them
                 valid_moves.append(self.move(prev, new, (m[0], m[1])))
 
 
