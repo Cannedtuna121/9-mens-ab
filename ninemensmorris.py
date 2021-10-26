@@ -18,9 +18,10 @@ class NineMensMorris:
         # The number of pieces available to be placed by each player
         self.white_pieces_avail = 9
         self.black_pieces_avail = 9
-        # The phase of the game we are on
+        # The phase of the game we are on for each player
         # 1 = placing phase, 2 = sliding phase, 3 = flying phase
-        self.phase = 1
+        self.white_phase = 1
+        self.black_phase = 1
 
     def isMill(self, prev, new):
             return False
