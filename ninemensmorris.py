@@ -19,9 +19,8 @@ class NineMensMorris:
         self.white_pieces_avail = 9
         self.black_pieces_avail = 9
         # The phase of the game we are on
-        self.phase1 = True  # Placing phase
-        self.phase2 = False # Shifting phase
-        self.phase3 = False # Flying phase
+        # 1 = placing phase, 2 = sliding phase, 3 = flying phase
+        self.phase = 1
 
     def isMill(self, prev, new):
             return False
