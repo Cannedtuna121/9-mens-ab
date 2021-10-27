@@ -23,7 +23,7 @@ class NineMensMorris:
         self.white_phase = 1
         self.black_phase = 1
 
-    def isMill(self, prev, new):
+    def isMill(self, prev, new, player):
             return True
     
     def newState(self):
@@ -103,7 +103,7 @@ class NineMensMorris:
                 for i in range(3):
                     for j in range(8):
                         if (self.board[i][j] == 0): # Empty space
-                            if (self.isMill(None, (i, j))): # Check if placing will cause a mill
+                            if (self.isMill(None, (i, j), current_player)): # Check if placing will cause a mill
                                 self.expandMillMove(None, (i, j), current_player, valid_moves)              
                             else:
                                 valid_moves.append(self.move(None, (i, j), None, current_player)) # Add non-mill state
@@ -116,7 +116,7 @@ class NineMensMorris:
                                 if (new == None or self.board[new[0]][new[1]] != 0): # Make sure move is valid and has an empty space
                                     continue
 
-                                if (self.isMill((i, j), new)): # check if moving there creates a mill
+                                if (self.isMill((i, j), new, current_player)): # check if moving there creates a mill
                                     self.expandMillMove((i, j), new, current_player, valid_moves)
                                 else:
                                     valid_moves.append(self.move((i, j), new, None, current_player)) # Add non-mill state
@@ -127,7 +127,7 @@ class NineMensMorris:
                             for ii in range(3):
                                 for jj in range(8):
                                     if (self.board[ii][jj] == 0): # Empty space
-                                        if (self.isMill((i, j), (ii, jj))): # Check if moving there creates a mill
+                                        if (self.isMill((i, j), (ii, jj), current_player)): # Check if moving there creates a mill
                                             self.expandMillMove((i, j), (ii, jj), current_player, valid_moves)
                                         else:
                                             valid_moves.append(self.move((i, j), (ii, jj), None, current_player)) # Add non-mill state
@@ -207,7 +207,7 @@ class NineMensMorris:
         for i in range(3):
             for j in range(8):
                 if (self.board[i][j] == current_player % 2 + 1):
-                    if (not self.isMill(None, (i, j))):
+                    if (not self.isMill(None, (i, j), current_player)):
                         # If the peice is the other players and not part of a mill remove it
                         valid_moves.append(self.move(prev, new, (i, j), current_player))
                         found_non_mill = True
