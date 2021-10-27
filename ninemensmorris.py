@@ -1,6 +1,7 @@
 # Nine Men's Morris Game
 
 import numpy as np
+from numpy.lib.function_base import blackman
 
 class NineMensMorris:
     # Constructor for the game: creates a new game with an empty board and 9 pieces for each player
@@ -26,8 +27,55 @@ class NineMensMorris:
     def isMill(self, prev, new):
             return True
     
-    def move(self, prev, new, remove):
-            return self
+    def newState(self):
+            temp = NineMensMorris()
+            temp.board = self.board
+            temp.white_pieces_on_board = self.white_pieces_on_board
+            temp.black_pieces_on_board = self.black_pieces_on_board
+            temp.white_pieces_avail = self.white_pieces_avail
+            temp.black_pieces_avail = self.black_pieces_avail
+            temp.white_phase = self.white_phase
+            temp.black_phase = self.black_phase
+            return temp
+    
+    def move(self, prev, new, remove, player):
+            temp = self.newState
+            #player is placing down a piece removing 1 from available pieces
+            if prev == None:
+                if player == 1:
+                    temp.board[new[0]][new[1]] = 1
+                    temp.white_pieces_avail = self.white_pieces_avail - 1
+                    #If there are no more available pieces set phase to sliding
+                    if temp.white_pieces_avail == 0:
+                        temp.white_phase = self.white_phase + 1
+                else:
+                    temp.board[new[0]][new[1]] = 2
+                    temp.black_pieces_avail = self.black_pieces_avail - 1
+                    if temp.black_pieces_avail == 0:
+                        temp.black_phase = self.black_phase + 1
+            else:
+                #either a slide or a jump, both cases set prev position to 0 and new 
+                #to 1 or 2 depending on which player is making the move
+                temp.board[prev[0]][prev[1]] = 0
+                if player == 1:
+                    temp.board[new[0]][new[1]] = 1
+                    #remove piece if remove isn't none
+                    if remove != None:
+                        temp.board[remove[0]][remove[1]] = 0
+                        temp.black_pieces_on_board = temp.black_pieces_on_board - 1
+                        #if black only has 3 pieces left set it to jump phase
+                        if temp.black_pieces_on_board == 3:
+                            temp.black_phase = 3
+                else:
+                    temp.board[new[0]][new[1]] = 1
+                    #remove piece if remove isn't none
+                    if remove != None:
+                        temp.board[remove[0]][remove[1]] = 0
+                        temp.white_pieces_on_board = temp.white_pieces_on_board - 1
+                        #if white only has 3 pieces left set it to jump phase
+                        if temp.white_pieces_on_board == 3:
+                            temp.white_phase = 3
+            return temp
 
     def getValidMoves(self, current_player):
             # Find out what phase the current player is in
