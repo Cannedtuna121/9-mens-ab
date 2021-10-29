@@ -23,6 +23,22 @@ class NineMensMorris:
         self.white_phase = 1
         self.black_phase = 1
 
+    # Function to help with debugging, prints a visual representation of the board
+    def printBoard(self):
+        print(str(self.board[0][0]) + "─────────" + str(self.board[0][1]) + "─────────" + str(self.board[0][2]))
+        print("┃         ┃         ┃")
+        print("┃   " + str(self.board[1][0]) + "─────" + str(self.board[1][1]) + "─────" + str(self.board[1][2]) + "   ┃")
+        print("┃   ┃     ┃     ┃   ┃")
+        print("┃   ┃  " + str(self.board[2][0]) + "──" + str(self.board[2][1]) + "──" + str(self.board[2][2]) + "  ┃   ┃")
+        print("┃   ┃  ┃     ┃  ┃   ┃")
+        print(str(self.board[0][7]) + "───" + str(self.board[1][7]) + "──" + str(self.board[2][7]) + "     " + str(self.board[2][3]) + "──" + str(self.board[1][3]) + "───" + str(self.board[0][3]))
+        print("┃   ┃  ┃     ┃  ┃   ┃")
+        print("┃   ┃  " + str(self.board[2][6]) + "──" + str(self.board[2][5]) + "──" + str(self.board[2][4]) + "  ┃   ┃")
+        print("┃   ┃     ┃     ┃   ┃")
+        print("┃   " + str(self.board[1][6]) + "─────" + str(self.board[1][5]) + "─────" + str(self.board[1][4]) + "   ┃")
+        print("┃         ┃         ┃")
+        print(str(self.board[0][6]) + "─────────" + str(self.board[0][5]) + "─────────" + str(self.board[0][4]))
+
     def isMill(self, prev, new, player):
         result = False
         # Create a copy of the board with the piece in location 'prev' removed (if 'prev' is not null)
