@@ -24,7 +24,72 @@ class NineMensMorris:
         self.black_phase = 1
 
     def isMill(self, prev, new, player):
-            return True
+        result = False
+        # Create a copy of the board with the piece in location 'prev' removed (if 'prev' is not null)
+        temp_board = np.copy(self.board)
+        if prev != None:
+            temp_board[prev[0]][prev[1]] = 0
+
+        # cases where 'new' piece is in a corner
+        if new[1] == 0:
+            if temp_board[new[0]][1] == player and temp_board[new[0]][2] == player:
+                result = True
+            elif temp_board[new[0]][7] == player and temp_board[new[0]][6] == player:
+                result = True
+        elif new[1] == 2:
+            if temp_board[new[0]][1] == player and temp_board[new[0]][0] == player:
+                result = True
+            elif temp_board[new[0]][3] == player and temp_board[new[0]][4] == player:
+                result = True
+        elif new[1] == 4:
+            if temp_board[new[0]][5] == player and temp_board[new[0]][6] == player:
+                result = True
+            elif temp_board[new[0]][3] == player and temp_board[new[0]][2] == player:
+                result = True
+        elif new[1] == 6:
+            if temp_board[new[0]][5] == player and temp_board[new[0]][4] == player:
+                result = True
+            elif temp_board[new[0]][7] == player and temp_board[new[0]][0] == player:
+                result = True
+        # cases where 'new' piece is not in a corner
+        elif new[1] == 1:
+            if temp_board[new[0]][0] == player and temp_board[new[0]][2] == player:
+                result = True
+            elif self.checkInwardLines(temp_board, new, player):
+                result = True
+        elif new[1] == 3:
+            if temp_board[new[0]][2] == player and temp_board[new[0]][4] == player:
+                result = True
+            elif self.checkInwardLines(temp_board, new, player):
+                result = True
+        elif new[1] == 5:
+            if temp_board[new[0]][4] == player and temp_board[new[0]][6] == player:
+                result = True
+            elif self.checkInwardLines(temp_board, new, player):
+                result = True
+        elif new[1] == 7:
+            if temp_board[new[0]][6] == player and temp_board[new[0]][0] == player:
+                result = True
+            elif self.checkInwardLines(temp_board, new, player):
+                result = True
+
+        return result
+    
+    # Helper function for isMill: checks if a mill is present on the appropriate inward line
+    def checkInwardLines(self, temp_board, new, player):
+        result = False
+
+        if new[0] == 0: # outer square
+            if temp_board[1][new[1]] == player and temp_board[2][new[1]] == player:
+                result = True
+        elif new[0] == 1: # middle square
+            if temp_board[0][new[1]] == player and temp_board[2][new[1]] == player:
+                result = True
+        else: # inner square
+            if temp_board[0][new[1]] == player and temp_board[1][new[1]] == player:
+                result = True
+        
+        return result
     
     def newState(self):
             temp = NineMensMorris()
