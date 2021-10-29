@@ -288,7 +288,7 @@ class NineMensMorris:
         for i in range(3):
             for j in range(8):
                 if (self.board[i][j] == current_player % 2 + 1):
-                    if (not self.isMill(None, (i, j), current_player)):
+                    if (not self.isMill(None, (i, j), current_player % 2 + 1)):
                         # If the peice is the other players and not part of a mill remove it
                         valid_moves.append(self.move(prev, new, (i, j), current_player))
                         found_non_mill = True
