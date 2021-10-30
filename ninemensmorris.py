@@ -303,7 +303,7 @@ class NineMensMorris:
 
     def isWin(self, player):
         if (player == 1 and self.white_phase > 1 and self.black_phase > 1):
-            return self.black_pieces_on_board <= 2 or self.getValidMoves(0).len() == 0
+            return self.black_pieces_on_board <= 2 or self.getValidMoves(2).len() == 0
         elif (player == 1):
             return False
         elif (self.white_phase > 1 and self.black_phase > 1):
