@@ -161,7 +161,7 @@ class NineMensMorris:
                         if temp.black_pieces_on_board == 3:
                             temp.black_phase = 3
                 else:
-                    temp.board[new[0]][new[1]] = 1
+                    temp.board[new[0]][new[1]] = 2
                     #remove piece if remove isn't none
                     if remove != None:
                         temp.board[remove[0]][remove[1]] = 0
