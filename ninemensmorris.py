@@ -125,6 +125,7 @@ class NineMensMorris:
                 if player == 1:
                     temp.board[new[0]][new[1]] = 1
                     temp.white_pieces_avail = self.white_pieces_avail - 1
+                    temp.white_pieces_on_board += 1
                     #If there are no more available pieces set phase to sliding
                     if temp.white_pieces_avail == 0:
                         temp.white_phase = self.white_phase + 1
@@ -138,6 +139,7 @@ class NineMensMorris:
                 else:
                     temp.board[new[0]][new[1]] = 2
                     temp.black_pieces_avail = self.black_pieces_avail - 1
+                    temp.black_pieces_on_board += 1
                     if temp.black_pieces_avail == 0:
                         temp.black_phase = self.black_phase + 1
                     #remove piece if remove isn't none
