@@ -17,7 +17,7 @@ state.black_phase = 3;
 assert(len(state.getValidMoves(1)) == 3 * 18); # Both player have moves and no one has won
 assert(len(state.getValidMoves(2)) == 3 * 18);
 assert(not state.isWin(1));
-assert(not state.isWind(2));
+assert(not state.isWin(2));
 
 state.board[0][6] = 1;
 state.board[0][5] = 2;
