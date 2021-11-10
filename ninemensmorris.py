@@ -312,3 +312,29 @@ class NineMensMorris:
             return self.white_pieces_on_board <= 2 or len(self.getValidMoves(1)) == 0
         else:
             return False
+
+    def minSlidesToMill(self, current_player):
+        seen = {}
+        originalLocation = []
+        queue = []
+        pieceNum = 0
+        for i in range(3):
+            for j in range(8):
+                if (self.board[i][j] == current_player):
+                    queue.append((pieceNum, (i, j), 0))
+                    seen[(pieceNum, (i, j))] = True
+                    originalLocation.append((i, j))
+                    pieceNum += 1
+        while (len(queue) > 0):
+           cur = queue[0]
+           del queue[0]
+           for direction in ['u', 'd', 'l', 'r']:
+               new = self.newSlidePosition(cur[1], direction)
+               if (not new == None and self.board[new[0]][new[1]] == 0):
+                   if (not (cur[0], new) in seen):
+                       if (self.isMill(originalLocation[cur[0]], new, current_player)):
+                           return cur[2] + 1
+                       else:
+                           seen[(cur[0], new)] = True
+                           queue.append((cur[0], new, cur[2] + 1))
+        return None

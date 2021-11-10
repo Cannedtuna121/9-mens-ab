@@ -48,3 +48,18 @@ def test_variable_update():
         assert(newState.black_phase == 1)
         assert(newState.white_pieces_on_board == 1)
         assert(newState.black_pieces_on_board == 1)
+
+# Testing that the correct value is returned
+def test_minSlidesToMill():
+    state = nmm.NineMensMorris();
+    state.board[0][0] = 1
+    state.board[0][7] = 1
+    state.board[0][2] = 1
+    assert(state.minSlidesToMill(1) == 4)
+    state.board[0][4] = 2
+    assert(state.minSlidesToMill(1) == 4)
+    state.board[1][0] = 2
+    assert(state.minSlidesToMill(1) == 6)
+    state.board[1][6] = 2;
+    assert(state.minSlidesToMill(2) == 6)
+    assert(state.minSlidesToMill(1) == 6)
