@@ -144,7 +144,7 @@ class RandomAgent:
         valid_moves = self.game.get_valid_moves(self.game.state, player)
         if len(valid_moves) == 0: 
             # If we have no valid moves, use the current state
-            state = game.state
+            state = self.game.state
         else: 
             # Otherwise randomly choose the next state 
             state = np.random.choice(valid_moves)
