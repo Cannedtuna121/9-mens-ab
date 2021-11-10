@@ -338,3 +338,324 @@ class NineMensMorris:
                            seen[(cur[0], new)] = True
                            queue.append((cur[0], new, cur[2] + 1))
         return None
+
+    
+    # Returns the given players' number of mills minus the opponents number of mills
+    def millDifference(self, player):
+        white_mill_count = 0
+        black_mill_count = 0
+
+        # Count the number of mills in outer square
+        outer_result = self.millCount(0)
+        white_mill_count += outer_result[0]
+        black_mill_count += outer_result[1]
+        # Count the number of mills in middle square
+        middle_result = self.millCount(1)
+        white_mill_count += middle_result[0]
+        black_mill_count += middle_result[1]
+        # Count the number of mills in inner square
+        inner_result = self.millCount(2)
+        white_mill_count += inner_result[0]
+        black_mill_count += inner_result[1]
+        # Count the number of mills on inward lines
+        if (self.board[0][1] == 1 and self.board[1][1] == 1 and self.board[2][1] == 1):
+            white_mill_count += 1
+        elif (self.board[0][1] == 2 and self.board[1][1] == 2 and self.board[2][1] == 2):
+            black_mill_count += 1
+        if (self.board[0][3] == 1 and self.board[1][3] == 1 and self.board[2][3] == 1):
+            white_mill_count += 1
+        elif (self.board[0][3] == 2 and self.board[1][3] == 2 and self.board[2][3] == 2):
+            black_mill_count += 1
+        if (self.board[0][5] == 1 and self.board[1][5] == 1 and self.board[2][5] == 1):
+            white_mill_count += 1
+        elif (self.board[0][5] == 2 and self.board[1][5] == 2 and self.board[2][5] == 2):
+            black_mill_count += 1
+        if (self.board[0][7] == 1 and self.board[1][7] == 1 and self.board[2][7] == 1):
+            white_mill_count += 1
+        elif (self.board[0][7] == 2 and self.board[1][7] == 2 and self.board[2][7] == 2):
+            black_mill_count += 1
+
+        if (player == 1):
+            return white_mill_count - black_mill_count
+        else:
+            return black_mill_count - white_mill_count
+    
+
+    # Helper function for millDifference: counts the number of mills in the given part of the
+    # board (i.e., outer (0), middle (1), or inner square (2))
+    def millCount(self, part_of_board):
+        white_mill_count = 0
+        black_mill_count = 0
+
+        if (self.board[part_of_board][0] == 1 and self.board[part_of_board][1] == 1 and self.board[part_of_board][2] == 1):
+            white_mill_count += 1
+        elif (self.board[part_of_board][0] == 2 and self.board[part_of_board][1] == 2 and self.board[part_of_board][2] == 2):
+            black_mill_count += 1
+        if (self.board[part_of_board][0] == 1 and self.board[part_of_board][7] == 1 and self.board[part_of_board][6] == 1):
+            white_mill_count += 1
+        elif (self.board[part_of_board][0] == 2 and self.board[part_of_board][7] == 2 and self.board[part_of_board][6] == 2):
+            black_mill_count += 1
+        if (self.board[part_of_board][4] == 1 and self.board[part_of_board][5] == 1 and self.board[part_of_board][6] == 1):
+            white_mill_count += 1
+        elif (self.board[part_of_board][4] == 2 and self.board[part_of_board][5] == 2 and self.board[part_of_board][6] == 2):
+            black_mill_count += 1
+        if (self.board[part_of_board][4] == 1 and self.board[part_of_board][3] == 1 and self.board[part_of_board][2] == 1):
+            white_mill_count += 1
+        elif (self.board[part_of_board][4] == 2 and self.board[part_of_board][3] == 2 and self.board[part_of_board][2] == 2):
+            black_mill_count += 1
+        
+        return (white_mill_count, black_mill_count)
+
+    # The number of opponents pieces which can't move minus the number of player pieces which can't move
+    def blockedInDifference(self, player):
+        white_blocked_in = 0
+        black_blocked_in = 0
+        
+        corners_result = self.cornerPiecesBlocked()
+        white_blocked_in += corners_result[0]
+        black_blocked_in += corners_result[1]
+
+        # i = 1, 3, 5, 7: non-corner spaces
+        for i in range(1, 8, 2):
+            temp = i + 1
+            if (temp == 8): temp = 0
+
+            if (self.board[0][i] == 1 and self.board[0][i - 1] != 0 and self.board[0][temp] != 0 and self.board[1][i] != 0):
+                white_blocked_in += 1
+            elif (self.board[0][i] == 2 and self.board[0][i - 1] != 0 and self.board[0][temp] != 0 and self.board[1][i] != 0):
+                black_blocked_in += 1
+            if (self.board[1][i] == 1 and self.board[0][i] != 0 and self.board[2][i] != 0 and self.board[1][i - 1] != 0 and self.board[1][temp] != 0):
+                white_blocked_in += 1
+            elif (self.board[1][i] == 2 and self.board[0][i] != 0 and self.board[2][i] != 0 and self.board[1][i - 1] != 0 and self.board[1][temp] != 0):
+                black_blocked_in += 1
+            if (self.board[2][i] == 1 and self.board[1][i] != 0 and self.board[2][i - 1] != 0 and self.board[2][temp] != 0):
+                white_blocked_in += 1
+            elif (self.board[2][i] == 2 and self.board[1][i] != 0 and self.board[2][i - 1] != 0 and self.board[2][temp] != 0):
+                black_blocked_in += 1
+
+        # Do not count any pieces as being blocked in if the player is in the flying phase
+        if (self.black_phase == 3): black_blocked_in = 0
+        if (self.white_phase == 3): white_blocked_in = 0
+
+        if (player == 1):
+            return black_blocked_in - white_blocked_in
+        else:
+            return white_blocked_in - black_blocked_in
+
+
+    # Helper function for blockedInDifference: returns the number of corner pieces which are blocked in
+    # for each player
+    def cornerPiecesBlocked(self):
+        white_blocked_in = 0
+        black_blocked_in = 0
+
+        # Count the number of blocked in pieces for each player in each corner
+        for i in range(3):
+            if (self.board[i][0] == 1 and self.board[i][1] != 0 and self.board[i][7] != 0):
+                white_blocked_in += 1
+            elif (self.board[i][0] == 2 and self.board[i][1] != 0 and self.board[i][7] != 0):
+                black_blocked_in += 1
+            if (self.board[i][2] == 1 and self.board[i][1] != 0 and self.board[i][3] != 0):
+                white_blocked_in += 1
+            elif (self.board[i][2] == 2 and self.board[i][1] != 0 and self.board[i][3] != 0):
+                black_blocked_in += 1
+            if (self.board[i][4] == 1 and self.board[i][3] != 0 and self.board[i][5] != 0):
+                white_blocked_in += 1
+            elif (self.board[i][4] == 2 and self.board[i][3] != 0 and self.board[i][5] != 0):
+                black_blocked_in += 1
+            if (self.board[i][6] == 1 and self.board[i][5] != 0 and self.board[i][7] != 0):
+                white_blocked_in += 1
+            elif (self.board[i][6] == 2 and self.board[i][5] != 0 and self.board[i][7] != 0):
+                black_blocked_in += 1
+        
+        return (white_blocked_in, black_blocked_in)
+
+    # spammable mill piece = a piece in a mill which you can continuously move out of the mill
+    # and back into the mill without risk of the opponent preventing your mill.
+    # Returns: number of spammable mill pieces of given player - number of spammable mill pieces of opponent
+    def spammableMillPieces(self, player):
+        white_result = 0
+        black_result = 0
+
+        # i = 0, 1, 2
+        for i in range(3):
+            #### Horizontal mills ####
+            if (self.board[i][0] == 1 and self.board[i][1] == 1 and self.board[i][2] == 1):
+                # Top left is spammable (i, 0)
+                if (self.board[i][7] == 0):
+                    white_result += 1
+                # Top right is spammable (i, 2)
+                if (self.board[i][3] == 0):
+                    white_result += 1
+                # Check if middle mill pieces are spammable
+                if (i == 0 and self.board[1][1] == 0):
+                    white_result += 1
+                elif (i == 1):
+                    if (self.board[0][1] == 0 and self.board[2][1] == 0):
+                        white_result += 1
+                    elif (self.board[0][1] == 1 and self.board[2][1] == 0):
+                        white_result += 1
+                    elif (self.board[0][1] == 0 and self.board[2][1] == 1):
+                        white_result += 1
+                elif (i == 2 and self.board[1][1] == 0):
+                    white_result += 1
+            elif (self.board[i][0] == 2 and self.board[i][1] == 2 and self.board[i][2] == 2):
+                # Top left is spammable (i, 0)
+                if (self.board[i][7] == 0):
+                    black_result += 1
+                # Top right is spammable (i, 2)
+                if (self.board[i][3] == 0):
+                    black_result += 1
+                # Check if middle mill pieces are spammable
+                if (i == 0 and self.board[1][1] == 0):
+                    black_result += 1
+                elif (i == 1):
+                    if (self.board[0][1] == 0 and self.board[2][1] == 0):
+                        black_result += 1
+                    elif (self.board[0][1] == 2 and self.board[2][1] == 0):
+                        black_result += 1
+                    elif (self.board[0][1] == 0 and self.board[2][1] == 2):
+                        black_result += 1
+                elif (i == 2 and self.board[1][1] == 0):
+                    black_result += 1
+            if (self.board[i][4] == 1 and self.board[i][5] == 1 and self.board[i][6] == 1):
+                # Bottom left is spammable (i, 6)
+                if (self.board[i][7] == 0):
+                    white_result += 1
+                # Bottom right is spammable (i, 4)
+                if (self.board[i][3] == 0):
+                    white_result += 1
+                # Check if middle mill pieces are spammable
+                if (i == 0 and self.board[1][5] == 0):
+                    white_result += 1
+                elif (i == 1):
+                    if (self.board[0][5] == 0 and self.board[2][5] == 0):
+                        white_result += 1
+                    elif (self.board[0][5] == 1 and self.board[2][5] == 0):
+                        white_result += 1
+                    elif (self.board[0][5] == 0 and self.board[2][5] == 1):
+                        white_result += 1
+                elif (i == 2 and self.board[1][5] == 0):
+                    white_result += 1
+            elif (self.board[i][4] == 2 and self.board[i][5] == 2 and self.board[i][6] == 2):
+                # Bottom left is spammable (i, 6)
+                if (self.board[i][7] == 0):
+                    black_result += 1
+                # Bottom right is spammable (i, 4)
+                if (self.board[i][3] == 0):
+                    black_result += 1
+                # Check if middle mill pieces are spammable
+                if (i == 0 and self.board[1][5] == 0):
+                    black_result += 1
+                elif (i == 1):
+                    if (self.board[0][5] == 0 and self.board[2][5] == 0):
+                        black_result += 1
+                    elif (self.board[0][5] == 2 and self.board[2][5] == 0):
+                        black_result += 1
+                    elif (self.board[0][5] == 0 and self.board[2][5] == 2):
+                        black_result += 1
+                elif (i == 2 and self.board[1][5] == 0):
+                    black_result += 1
+            #### Vertical mills ####
+            if (self.board[i][0] == 1 and self.board[i][7] == 1 and self.board[i][6] == 1):
+                # Top left is spammable (i, 0)
+                if (self.board[i][1] == 0):
+                    white_result += 1
+                # Bottom left is spammable (i, 6)
+                if (self.board[i][5] == 0):
+                    white_result += 1
+                # Check if middle mill pieces are spammable
+                if (i == 0 and self.board[1][7] == 0):
+                    white_result += 1
+                elif (i == 1):
+                    if (self.board[0][7] == 0 and self.board[2][7] == 0):
+                        white_result += 1
+                    elif (self.board[0][7] == 1 and self.board[2][7] == 0):
+                        white_result += 1
+                    elif (self.board[0][7] == 0 and self.board[2][7] == 1):
+                        white_result += 1
+                elif (i == 2 and self.board[1][7] == 0):
+                    white_result += 1
+            elif (self.board[i][0] == 2 and self.board[i][7] == 2 and self.board[i][6] == 2):
+                # Top left is spammable (i, 0)
+                if (self.board[i][1] == 0):
+                    black_result += 1
+                # Bottom left is spammable (i, 6)
+                if (self.board[i][5] == 0):
+                    black_result += 1
+                # Check if middle mill pieces are spammable
+                if (i == 0 and self.board[1][7] == 0):
+                    black_result += 1
+                elif (i == 1):
+                    if (self.board[0][7] == 0 and self.board[2][7] == 0):
+                        black_result += 1
+                    elif (self.board[0][7] == 2 and self.board[2][7] == 0):
+                        black_result += 1
+                    elif (self.board[0][7] == 0 and self.board[2][7] == 2):
+                        black_result += 1
+                elif (i == 2 and self.board[1][7] == 0):
+                    black_result += 1
+            if (self.board[i][2] == 1 and self.board[i][3] == 1 and self.board[i][4] == 1):
+                # Top right is spammable (i, 2)
+                if (self.board[i][1] == 0):
+                    white_result += 1
+                # Bottom right is spammable (i, 4)
+                if (self.board[i][5] == 0):
+                    white_result += 1
+                # Check if middle mill pieces are spammable
+                if (i == 0 and self.board[1][3] == 0):
+                    white_result += 1
+                elif (i == 1):
+                    if (self.board[0][3] == 0 and self.board[2][3] == 0):
+                        white_result += 1
+                    elif (self.board[0][3] == 1 and self.board[2][3] == 0):
+                        white_result += 1
+                    elif (self.board[0][3] == 0 and self.board[2][3] == 1):
+                        white_result += 1
+                elif (i == 2 and self.board[1][3] == 0):
+                    white_result += 1
+            elif (self.board[i][2] == 2 and self.board[i][3] == 2 and self.board[i][4] == 2):
+                # Top right is spammable (i, 2)
+                if (self.board[i][1] == 0):
+                    black_result += 1
+                # Bottom right is spammable (i, 4)
+                if (self.board[i][5] == 0):
+                    black_result += 1
+                # Check if middle mill pieces are spammable
+                if (i == 0 and self.board[1][3] == 0):
+                    black_result += 1
+                elif (i == 1):
+                    if (self.board[0][3] == 0 and self.board[2][3] == 0):
+                        black_result += 1
+                    elif (self.board[0][3] == 2 and self.board[2][3] == 0):
+                        black_result += 1
+                    elif (self.board[0][3] == 0 and self.board[2][3] == 2):
+                        black_result += 1
+                elif (i == 2 and self.board[1][3] == 0):
+                    black_result += 1
+
+        # Now check mills on inward lines
+        # i = 1, 3, 5, 7
+        for i in range(1, 8, 2):
+            temp = i + 1
+            if temp == 8: temp = 0
+
+            if (self.board[0][i] == 1 and self.board[1][i] == 1 and self.board[2][i] == 1):
+                if ((self.board[0][i - 1] == 0 or self.board[0][temp] == 0) and (self.board[0][i - 1] != 2 and self.board[0][temp] != 2)):
+                    white_result += 1
+                if ((self.board[1][i - 1] == 0 or self.board[1][temp] == 0) and (self.board[1][i - 1] != 2 and self.board[1][temp] != 2)):
+                    white_result += 1
+                if ((self.board[2][i - 1] == 0 or self.board[2][temp] == 0) and (self.board[2][i - 1] != 2 and self.board[2][temp] != 2)):
+                    white_result += 1
+            elif (self.board[0][i] == 2 and self.board[1][i] == 2 and self.board[2][i] == 2):
+                if ((self.board[0][i - 1] == 0 or self.board[0][temp] == 0) and (self.board[0][i - 1] != 1 and self.board[0][temp] != 1)):
+                    black_result += 1
+                if ((self.board[1][i - 1] == 0 or self.board[1][temp] == 0) and (self.board[1][i - 1] != 1 and self.board[1][temp] != 1)):
+                    black_result += 1
+                if ((self.board[2][i - 1] == 0 or self.board[2][temp] == 0) and (self.board[2][i - 1] != 1 and self.board[2][temp] != 1)):
+                    black_result += 1
+
+        if (player == 1): return white_result - black_result
+        else: return black_result - white_result
+    
+    
