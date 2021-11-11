@@ -473,7 +473,7 @@ class NineMensMorris:
     # spammable mill piece = a piece in a mill which you can continuously move out of the mill
     # and back into the mill without risk of the opponent preventing your mill.
     # Returns: number of spammable mill pieces of given player - number of spammable mill pieces of opponent
-    def spammableMillPieces(self, player):
+    def spammableMillPiecesDifference(self, player):
         white_result = 0
         black_result = 0
 
