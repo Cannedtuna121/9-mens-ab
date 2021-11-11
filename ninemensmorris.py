@@ -657,5 +657,102 @@ class NineMensMorris:
 
         if (player == 1): return white_result - black_result
         else: return black_result - white_result
+
+    def numIntersectionsHeld(self, player):
+        num = 0
+        for i in range(0,3):
+            if self.board[i][1] == player: num = num + 1
+            if self.board[i][3] == player: num = num + 1
+            if self.board[i][5] == player: num = num + 1
+            if self.board[i][7] == player: num = num + 1
+        return num
     
-    
+    def numDoubleMills(self, player):
+        num = 0
+        #check for first level
+        if(self.board[0][0] == player and self.board[0][1] == player and self.board[0][2] == player):
+            if(self.board[0][7] == 0 and self.isMill((0,0), (0,7), player)): num = num + 1
+            if(self.board[1][1] == 0 and self.isMill((0,1), (1,1), player)): num = num + 1
+            if(self.board[0][3] == 0 and self.isMill((0,2), (0,3), player)): num = num + 1
+        if(self.board[0][2] == player and self.board[0][3] == player and self.board[0][4] == player):
+            if(self.board[0][1] == 0 and self.isMill((0,2), (0,1), player)): num = num + 1
+            if(self.board[1][3] == 0 and self.isMill((0,3), (1,3), player)): num = num + 1
+            if(self.board[0][5] == 0 and self.isMill((0,4), (0,5), player)): num = num + 1
+        if(self.board[0][4] == player and self.board[0][5] == player and self.board[0][6] == player):
+            if(self.board[0][3] == 0 and self.isMill((0,4), (0,3), player)): num = num + 1
+            if(self.board[1][5] == 0 and self.isMill((0,5), (1,5), player)): num = num + 1
+            if(self.board[0][7] == 0 and self.isMill((0,6), (0,7), player)): num = num + 1
+        if(self.board[0][6] == player and self.board[0][7] == player and self.board[0][0] == player):
+            if(self.board[0][5] == 0 and self.isMill((0,6), (0,5), player)): num = num + 1
+            if(self.board[1][7] == 0 and self.isMill((0,7), (1,7), player)): num = num + 1
+            if(self.board[0][1] == 0 and self.isMill((0,0), (0,1), player)): num = num + 1
+        #Second layer
+        if(self.board[1][0] == player and self.board[1][1] == player and self.board[1][2] == player):
+            if(self.board[1][7] == 0 and self.isMill((1,0), (1,7), player)): num = num + 1
+            if(self.board[2][1] == 0 and self.isMill((1,1), (2,1), player)): num = num + 1
+            if(self.board[0][1] == 0 and self.isMill((1,1), (0,1), player)): num = num + 1
+            if(self.board[1][3] == 0 and self.isMill((1,2), (1,3), player)): num = num + 1
+        if(self.board[1][2] == player and self.board[1][3] == player and self.board[1][4] == player):
+            if(self.board[1][1] == 0 and self.isMill((1,2), (1,1), player)): num = num + 1
+            if(self.board[2][3] == 0 and self.isMill((1,3), (2,3), player)): num = num + 1
+            if(self.board[0][3] == 0 and self.isMill((1,3), (0,3), player)): num = num + 1
+            if(self.board[1][5] == 0 and self.isMill((1,4), (1,5), player)): num = num + 1
+        if(self.board[1][4] == player and self.board[1][5] == player and self.board[1][6] == player):
+            if(self.board[1][3] == 0 and self.isMill((1,4), (1,3), player)): num = num + 1
+            if(self.board[2][5] == 0 and self.isMill((1,5), (2,5), player)): num = num + 1
+            if(self.board[0][5] == 0 and self.isMill((1,5), (0,5), player)): num = num + 1
+            if(self.board[1][7] == 0 and self.isMill((1,6), (1,7), player)): num = num + 1
+        if(self.board[1][6] == player and self.board[1][7] == player and self.board[1][0] == player):
+            if(self.board[1][5] == 0 and self.isMill((1,6), (1,5), player)): num = num + 1
+            if(self.board[2][7] == 0 and self.isMill((1,7), (2,7), player)): num = num + 1
+            if(self.board[0][7] == 0 and self.isMill((1,7), (0,7), player)): num = num + 1
+            if(self.board[1][1] == 0 and self.isMill((1,0), (1,1), player)): num = num + 1
+        #Third level
+        if(self.board[2][0] == player and self.board[2][1] == player and self.board[2][2] == player):
+            if(self.board[2][7] == 0 and self.isMill((2,0), (2,7), player)): num = num + 1
+            if(self.board[1][1] == 0 and self.isMill((2,1), (1,1), player)): num = num + 1
+            if(self.board[2][3] == 0 and self.isMill((2,2), (2,3), player)): num = num + 1
+        if(self.board[2][2] == player and self.board[2][3] == player and self.board[2][4] == player):
+            if(self.board[2][1] == 0 and self.isMill((2,2), (2,1), player)): num = num + 1
+            if(self.board[1][3] == 0 and self.isMill((2,3), (1,3), player)): num = num + 1
+            if(self.board[2][5] == 0 and self.isMill((2,4), (2,5), player)): num = num + 1
+        if(self.board[2][4] == player and self.board[2][5] == player and self.board[2][6] == player):
+            if(self.board[2][3] == 0 and self.isMill((2,4), (2,3), player)): num = num + 1
+            if(self.board[1][5] == 0 and self.isMill((2,5), (1,5), player)): num = num + 1
+            if(self.board[2][7] == 0 and self.isMill((2,6), (2,7), player)): num = num + 1
+        if(self.board[2][6] == player and self.board[2][7] == player and self.board[2][0] == player):
+            if(self.board[2][5] == 0 and self.isMill((2,6), (2,5), player)): num = num + 1
+            if(self.board[1][7] == 0 and self.isMill((2,7), (1,7), player)): num = num + 1
+            if(self.board[2][1] == 0 and self.isMill((2,0), (2,1), player)): num = num + 1
+        #Check for 4 lines going in to center
+        if(self.board[0][1] == player and self.board[1][1] == player and self.board[2][1] == player):
+            if(self.board[0][0] == 0 and self.isMill((0,1), (0,0), player)): num = num + 1
+            if(self.board[0][2] == 0 and self.isMill((0,1), (0,2), player)): num = num + 1
+            if(self.board[1][0] == 0 and self.isMill((1,1), (1,0), player)): num = num + 1
+            if(self.board[1][2] == 0 and self.isMill((1,1), (1,2), player)): num = num + 1
+            if(self.board[2][0] == 0 and self.isMill((2,1), (2,0), player)): num = num + 1
+            if(self.board[2][2] == 0 and self.isMill((2,1), (2,2), player)): num = num + 1
+        if(self.board[0][3] == player and self.board[1][3] == player and self.board[2][3] == player):
+            if(self.board[0][2] == 0 and self.isMill((0,3), (0,2), player)): num = num + 1
+            if(self.board[0][4] == 0 and self.isMill((0,3), (0,4), player)): num = num + 1
+            if(self.board[1][2] == 0 and self.isMill((1,3), (1,2), player)): num = num + 1
+            if(self.board[1][4] == 0 and self.isMill((1,3), (1,4), player)): num = num + 1
+            if(self.board[2][2] == 0 and self.isMill((2,3), (2,2), player)): num = num + 1
+            if(self.board[2][4] == 0 and self.isMill((2,3), (2,4), player)): num = num + 1
+        if(self.board[0][5] == player and self.board[1][5] == player and self.board[2][5] == player):
+            if(self.board[0][4] == 0 and self.isMill((0,5), (0,4), player)): num = num + 1
+            if(self.board[0][6] == 0 and self.isMill((0,5), (0,6), player)): num = num + 1
+            if(self.board[1][4] == 0 and self.isMill((1,5), (1,4), player)): num = num + 1
+            if(self.board[1][6] == 0 and self.isMill((1,5), (1,6), player)): num = num + 1
+            if(self.board[2][4] == 0 and self.isMill((2,5), (2,4), player)): num = num + 1
+            if(self.board[2][6] == 0 and self.isMill((2,5), (2,6), player)): num = num + 1
+        if(self.board[0][7] == player and self.board[1][7] == player and self.board[2][7] == player):
+            if(self.board[0][6] == 0 and self.isMill((0,7), (0,6), player)): num = num + 1
+            if(self.board[0][0] == 0 and self.isMill((0,7), (0,0), player)): num = num + 1
+            if(self.board[1][6] == 0 and self.isMill((1,7), (1,6), player)): num = num + 1
+            if(self.board[1][0] == 0 and self.isMill((1,7), (1,0), player)): num = num + 1
+            if(self.board[2][6] == 0 and self.isMill((2,7), (2,6), player)): num = num + 1
+            if(self.board[2][0] == 0 and self.isMill((2,7), (2,0), player)): num = num + 1
+        return num
+
+
