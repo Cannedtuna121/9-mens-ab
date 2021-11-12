@@ -63,3 +63,119 @@ def test_minSlidesToMill():
     state.board[1][6] = 2;
     assert(state.minSlidesToMill(2) == 6)
     assert(state.minSlidesToMill(1) == 6)
+
+# Testing that millDifference returns the right value
+def test_millDifference():
+    state = nmm.NineMensMorris();
+    assert(state.millDifference(1) == 0)
+    assert(state.millDifference(2) == 0)
+    state.board[0][0] = 1;
+    state.board[0][1] = 1;
+    state.board[0][2] = 1;
+    assert(state.millDifference(1) == 1)
+    assert(state.millDifference(2) == -1)
+    state.board[1][0] = 1;
+    state.board[1][1] = 1;
+    state.board[1][2] = 1;
+    assert(state.millDifference(1) == 2)
+    assert(state.millDifference(2) == -2)
+    state.board[2][0] = 2;
+    state.board[2][7] = 2;
+    state.board[2][6] = 2;
+    assert(state.millDifference(1) == 1)
+    assert(state.millDifference(2) == -1)
+
+# Test that blockedInDifference returns the correct value
+def test_blockedInDifference():
+    state = nmm.NineMensMorris();
+    assert(state.blockedInDifference(1) == 0)
+    assert(state.blockedInDifference(2) == 0)
+    state.board[0][0] = 1;
+    state.board[0][7] = 2;
+    state.board[0][1] = 2;
+    assert(state.blockedInDifference(1) == -1)
+    assert(state.blockedInDifference(2) == 1)
+    state.board[1][1] = 2;
+    state.board[0][2] = 2;
+    state.printBoard()
+    assert(state.blockedInDifference(1) == 0)
+    assert(state.blockedInDifference(2) == 0)
+    state.board[1][5] = 2;
+    state.board[2][5] = 1;
+    state.board[0][5] = 1;
+    state.board[1][6] = 1;
+    state.board[1][4] = 1;
+    assert(state.blockedInDifference(1) == 1)
+    assert(state.blockedInDifference(2) == -1)
+
+# Test that spammableMillPiecesDifference returns the correct value
+def test_spammableMillPiecesDifference():
+    state = nmm.NineMensMorris();
+    assert(state.spammableMillPiecesDifference(1) == 0)
+    assert(state.spammableMillPiecesDifference(2) == 0)
+    state.board[0][0] = 1;
+    state.board[0][1] = 1;
+    state.board[0][2] = 1;
+    assert(state.spammableMillPiecesDifference(1) == 3)
+    assert(state.spammableMillPiecesDifference(2) == -3)
+    state.board[1][0] = 1;
+    state.board[1][2] = 1;
+    state.board[1][1] = 1;
+    assert(state.spammableMillPiecesDifference(1) == 5)
+    assert(state.spammableMillPiecesDifference(2) == -5)
+    state.board[1][6] = 2;
+    state.board[1][5] = 2;
+    state.board[1][4] = 2;
+    state.board[2][6] = 2;
+    state.board[2][4] = 2;
+    state.board[2][3] = 2;
+    state.board[2][2] = 2;
+    assert(state.spammableMillPiecesDifference(1) == -1)
+    assert(state.spammableMillPiecesDifference(2) == 1)
+    state.board[2][1] = 2;
+    assert(state.spammableMillPiecesDifference(1) == -1)
+    assert(state.spammableMillPiecesDifference(2) == 1)
+
+# Test that numIntersectionsHeld returns the correct value
+def test_numIntersectionsHeld():
+    state = nmm.NineMensMorris()
+    assert(state.numIntersectionsHeld(1) == 0)
+    assert(state.numIntersectionsHeld(2) == 0)
+    state.board[0][0] = 1;
+    state.board[0][1] = 1;
+    state.board[0][2] = 2;
+    state.board[0][3] = 2;
+    assert(state.numIntersectionsHeld(1) == 1)
+    assert(state.numIntersectionsHeld(2) == 1)
+    state.board[2][1] = 1;
+    state.board[1][5] = 2;
+    assert(state.numIntersectionsHeld(1) == 2)
+    assert(state.numIntersectionsHeld(2) == 2)
+
+# Test that numDoubleMills returns the correct values
+def test_numDoubleMills():
+    state = nmm.NineMensMorris()
+    assert(state.numDoubleMills(1) == 0)
+    assert(state.numDoubleMills(2) == 0)
+    state.board[0][0] = 1;
+    state.board[0][1] = 1;
+    state.board[0][2] = 1;
+    state.board[1][0] = 1;
+    state.board[1][2] = 1;
+    assert(state.numDoubleMills(1) == 1)
+    assert(state.numDoubleMills(2) == 0)
+    state.board[0][5] = 2;
+    state.board[1][5] = 2;
+    state.board[2][5] = 2;
+    state.board[2][2] = 2;
+    state.board[2][3] = 2;
+    assert(state.numDoubleMills(1) == 1)
+    assert(state.numDoubleMills(2) == 1)
+    state.board[0][3] = 2;
+    state.board[1][4] = 2;
+    state.board[1][6] = 2;
+    assert(state.numDoubleMills(1) == 1)
+    assert(state.numDoubleMills(2) == 2)
+    state.board[2][4] = 1;
+    assert(state.numDoubleMills(1) == 1)
+    assert(state.numDoubleMills(2) == 1)
