@@ -179,3 +179,13 @@ def test_numDoubleMills():
     state.board[2][4] = 1;
     assert(state.numDoubleMills(1) == 1)
     assert(state.numDoubleMills(2) == 1)
+
+
+#Test that num of 3 piece configurations are calculated properly
+def test_3Piece_configs():
+    state = nmm.NineMensMorris()
+    assert(state.num3PieceConfigs(1) == 0)
+    for i in range(0,3):
+        for j in range(0,8):
+            state.board[i][j] = 1
+    assert(state.num3PieceConfigs(1) == 44)

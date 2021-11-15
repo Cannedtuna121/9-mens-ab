@@ -756,3 +756,30 @@ class NineMensMorris:
         return num
 
 
+    def numPiecesDifferent (self, player):
+        if(player == 1): return self.white_pieces_on_board - self.black_pieces_on_board
+        else: return self.black_pieces_on_board - self.white_pieces_on_board
+    
+    def num3PieceConfigs (self, player):
+        num = 0
+        for i in range(0, 8, 2):
+            #First Layer
+            if self.board[0][i] == player:
+                if self.board[0][i+1] == player and self.board[1][i+1] == player: num = num + 1
+                if self.board[0][(i+6)%8] == player and self.board[1][(i+6)%8] == player: num = num + 1
+                if self.board[0][i+1] == player and self.board[0][(i+6)%8] == player: num = num + 1
+            #Second Layer
+            if self.board[1][i] == player:
+                if self.board[1][i+1] == player and self.board[2][i+1] == player: num = num + 1
+                if self.board[1][(i+6)%8] == player and self.board[2][(i+6)%8] == player: num = num + 1
+                if self.board[1][i+1] == player and self.board[0][i+1] == player: num = num + 1
+                if self.board[1][(i+6)%8] == player and self.board[0][(i+6)%8] == player: num = num + 1
+                if self.board[1][i+1] == player and self.board[1][(i+6)%7] == player: num = num + 1
+            #Third Layer
+            if self.board[2][i] == player:
+                if self.board[2][i+1] == player and self.board[1][i+1] == player: num = num + 1
+                if self.board[2][(i+6)%8] == player and self.board[1][(i+6)%8] == player: num = num + 1
+                if self.board[2][i+1] == player and self.board[2][(i+6)%8] == player: num = num + 1
+        return num
+    
+    
