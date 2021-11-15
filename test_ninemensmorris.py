@@ -1,4 +1,5 @@
 import ninemensmorris as nmm
+import pytest
 
 # Making sure we detect wins due to lack of moves correctly 
 def test_no_move_win():
@@ -189,3 +190,23 @@ def test_3Piece_configs():
         for j in range(0,8):
             state.board[i][j] = 1
     assert(state.num3PieceConfigs(1) == 44)
+
+@pytest.mark.parametrize(
+    "board, player, num", [
+    ([[1,1,1,1,1,1,1,1], [0,0,0,0,0,0,0,0], [1,0,1,0,1,0,1,0]], 1, 8),
+    ([[1,1,1,1,1,1,1,1], [0,0,0,0,0,0,0,0], [1,0,1,0,1,0,1,0]], 0, 8),
+])
+def test_num2PieceConfigs(board, player, num):
+    state = nmm.NineMensMorris()
+    state.board = board
+    assert state.num2PieceConfigs(player) == num
+
+@pytest.mark.parametrize(
+    "board, player, num", [
+    ([[1,1,1,1,1,1,1,1], [0,0,0,0,0,0,0,0], [1,0,1,0,1,0,1,0]], 1, 8),
+    ([[1,1,1,1,1,1,1,1], [0,0,0,0,0,0,0,0], [1,0,1,0,1,0,1,0]], 0, 4),
+])
+def test_numNonOppositeCorners(board, player, num):
+    state = nmm.NineMensMorris()
+    state.board = board
+    assert state.numNonOppositeCorners(player) == num

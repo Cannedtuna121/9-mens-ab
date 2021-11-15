@@ -782,4 +782,16 @@ class NineMensMorris:
                 if self.board[2][i+1] == player and self.board[2][(i+6)%8] == player: num = num + 1
         return num
     
-    
+    def num2PieceConfigs(self, player):
+        # For each layer, find the 2 piece configs and sum
+        return sum([sum([(layer[i] == player and
+                         layer[(i+1)%len(layer)] == player)
+                         for i in range(len(layer))])
+                   for layer in self.board])
+
+    def numNonOppositeCorners(self, player):
+        # For each layer, find the non opp corners and sum 
+        return sum([sum([(layer[i] == player and
+                          layer[(i+2)%len(layer)] == player)
+                         for i in range(0, len(layer), 2)])
+                   for layer in self.board])
