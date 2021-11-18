@@ -795,3 +795,80 @@ class NineMensMorris:
                           layer[(i+2)%len(layer)] == player)
                          for i in range(0, len(layer), 2)])
                    for layer in self.board])
+
+    
+    # Evaluates a NMM board state as an integer value
+    # player = the player whos phase we are basing the board state on
+    # player_to_max = the player who is MAX
+    def eval(self, player, player_to_max):
+        if (player_to_max == 1): player_to_min = 2
+        else: player_to_min = 1
+
+        # If player = 1, evaluate the board state from the phase of player 1
+        if (player == 1):
+            if (self.white_phase == 1):
+                # result = 4a + 7c + 7g + 2i
+                a = self.millDifference(player_to_max)
+                c = self.num2PieceConfigs(player_to_max) - self.num2PieceConfigs(player_to_min)
+                g = self.numIntersectionsHeld(player_to_max) - self.numIntersectionsHeld(player_to_min)
+                i = self.minSlidesToMill(player_to_max) - self.minSlidesToMill(player_to_min)
+                result = 4*a + 7*c + 7*g + 2*i
+            elif (self.white_phase == 2):
+                if (self.isWin(player_to_max)): result = 1_000_000_000
+                elif (self.isWin(player_to_min)): result = -1_000_000_000
+                else:
+                    # result = 3a + 1.5c + 2.5d + 2.5e + 2f + 2g + 4h + 2.5i
+                    a = self.millDifference(player_to_max)
+                    c = self.num2PieceConfigs(player_to_max) - self.num2PieceConfigs(player_to_min)
+                    d = self.numPiecesDifferent(player_to_max)
+                    e = self.blockedInDifference(player_to_max)
+                    f = self.spammableMillPiecesDifference(player_to_max)
+                    g = self.numIntersectionsHeld(player_to_max) - self.numIntersectionsHeld(player_to_min)
+                    h = self.numDoubleMills(player_to_max) - self.numDoubleMills(player_to_min)
+                    i = self.minSlidesToMill(player_to_max) - self.minSlidesToMill(player_to_min)
+                    result = 3*a + 1.5*c + 2.5*d + 2.5*e + 2*f + 2*g + 4*h + 2.5*i
+            elif (self.white_phase == 3):
+                if (self.isWin(player_to_max)): result = 1_000_000_000
+                elif (self.isWin(player_to_min)): result = -1_000_000_000
+                else:
+                    # result = 3c + 10d + 5j + 2k
+                    c = self.num2PieceConfigs(player_to_max) - self.num2PieceConfigs(player_to_min)
+                    d = self.numPiecesDifferent(player_to_max)
+                    j = self.num3PieceConfigs(player_to_max) - self.num3PieceConfigs(player_to_min)
+                    k = self.numNonOppositeCorners(player_to_max)
+                    result = 3*c + 10*d + 5*j + 2*k
+        # If player = 2, evaluate the board state from the phase of player 2
+        elif (player == 2):
+            if (self.black_phase == 1):
+                # result = 4a + 7c + 7g + 2i
+                a = self.millDifference(player_to_max)
+                c = self.num2PieceConfigs(player_to_max) - self.num2PieceConfigs(player_to_min)
+                g = self.numIntersectionsHeld(player_to_max) - self.numIntersectionsHeld(player_to_min)
+                i = self.minSlidesToMill(player_to_max) - self.minSlidesToMill(player_to_min)
+                result = 4*a + 7*c + 7*g + 2*i
+            elif (self.black_phase == 2):
+                if (self.isWin(player_to_max)): result = 1_000_000_000
+                elif (self.isWin(player_to_min)): result = -1_000_000_000
+                else:
+                    # result = 3a + 1.5c + 2.5d + 2.5e + 2f + 2g + 4h + 2.5i
+                    a = self.millDifference(player_to_max)
+                    c = self.num2PieceConfigs(player_to_max) - self.num2PieceConfigs(player_to_min)
+                    d = self.numPiecesDifferent(player_to_max)
+                    e = self.blockedInDifference(player_to_max)
+                    f = self.spammableMillPiecesDifference(player_to_max)
+                    g = self.numIntersectionsHeld(player_to_max) - self.numIntersectionsHeld(player_to_min)
+                    h = self.numDoubleMills(player_to_max) - self.numDoubleMills(player_to_min)
+                    i = self.minSlidesToMill(player_to_max) - self.minSlidesToMill(player_to_min)
+                    result = 3*a + 1.5*c + 2.5*d + 2.5*e + 2*f + 2*g + 4*h + 2.5*i
+            elif (self.black_phase == 3):
+                if (self.isWin(player_to_max)): result = 1_000_000_000
+                elif (self.isWin(player_to_min)): result = -1_000_000_000
+                else:
+                    # result = 3c + 10d + 5j + 2k
+                    c = self.num2PieceConfigs(player_to_max) - self.num2PieceConfigs(player_to_min)
+                    d = self.numPiecesDifferent(player_to_max)
+                    j = self.num3PieceConfigs(player_to_max) - self.num3PieceConfigs(player_to_min)
+                    k = self.numNonOppositeCorners(player_to_max)
+                    result = 3*c + 10*d + 5*j + 2*k
+
+        return result
