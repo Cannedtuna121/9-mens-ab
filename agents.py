@@ -120,6 +120,85 @@ class AlphaBetaAgent:
         # initially set alpha to be min and beta to be max
         return self.alpha_beta(0, game, player, self.min, self.max)
 
+
+class HumanAgent:
+
+    def __init__(self):
+        # Nothing has to be done on init currently
+        return
+
+    def find_opt_move(self, game, player):
+        # print the board
+        game.printBoard()
+
+        # determine the phase
+        if (player == 1):
+            phase = game.white_phase
+        elif (player == 2):
+            phase = game.black_phase
+
+        while (True):
+            if (phase == 1):
+                print("Place piece at: ")
+                pos = self.read_position()
+                if game.board[pos[0]][pos[1]] == 0:
+                    if (game.isMill(None, pos, player)):
+                        # Note: Piece removal is not validated
+                        print("Enter piece to remove: ")
+                        rem_pos = self.read_position()
+                        return game.move(None, pos, rem_pos, player) , 0
+                    else:
+                        return game.move(None, pos, None, player), 0
+                print("Invalid Move, Try Again")
+            elif (phase == 2):
+                print("Slide piece at: ")
+                pos = self.read_position()
+                if (game.board[pos[0]][pos[1]] == player):
+                    slide_dir = input("Enter slide direction (u, d, l , r)")
+                    new_pos = game.newSlidePosition(pos, slide_dir)
+                    if (new_pos != None and game.board[new_pos[0]][new_pos[1]] == 0):
+                        if (game.isMill(pos, new_pos, player)):
+                            # Note: Piece removal is not validated
+                            print("Enter piece to remove: ")
+                            rem_pos = self.read_position()
+                            return game.move(pos, new_pos, rem_pos, player), 0
+                        else:
+                            return game.move(pos, new_pos, None, player), 0
+                print("Invalid Move, Try Again")
+            else:
+                print("Jump piece at: ")
+                pos = self.read_position()
+                if (game.board[pos[0]][pos[1]] == player):
+                    print("Enter jump location: ")
+                    new_pos = self.read_position()
+                    if (game.board[new_pos[0]][new_pos[1]] == 0):
+                        if (game.isMill(pos, new_pos, player)):
+                            # Note: Piece removal is not validated
+                            print("Enter piece to remove: ")
+                            rem_pos = self.read_position()
+                            return game.move(pos, new_pos, rem_pos, player), 0
+                        else:
+                            return game.move(pos, new_pos, None, player), 0
+                print("Invalid Move, Try Again")
+
+
+    def read_position(self):
+        while (True):
+            playerInput = input().split()
+            if (len(playerInput) != 2):
+                print("Invalid Input")
+            try:
+                playerInput[0] = int(playerInput[0])
+                playerInput[1] = int(playerInput[1])
+                if (playerInput[0] >= 0 and playerInput[0] <= 2 and
+                        playerInput[1] >= 0 and playerInput[1] <= 7):
+                    return (playerInput[0], playerInput[1])
+                else:
+                    print("Out of bounds")
+            except TypeError:
+                print("Input must be integers")
+
+
 class RandomAgent:
 
     def __init__(self):
