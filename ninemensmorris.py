@@ -22,6 +22,8 @@ class NineMensMorris:
         # 1 = placing phase, 2 = sliding phase, 3 = flying phase
         self.white_phase = 1
         self.black_phase = 1
+        
+        self.get_opp = lambda p: (p%2 + 1)
 
     # Function to help with debugging, prints a visual representation of the board
     def printBoard(self):
@@ -337,7 +339,7 @@ class NineMensMorris:
                        else:
                            seen[(cur[0], new)] = True
                            queue.append((cur[0], new, cur[2] + 1))
-        return None
+        return 25
 
     
     # Returns the given players' number of mills minus the opponents number of mills

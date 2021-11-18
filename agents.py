@@ -2,7 +2,7 @@ import numpy as np
 
 class AlphaBetaAgent:
 
-    def __init__(self, game, upper_lim=100, lower_lim=-100, max_depth=3):
+    def __init__(self, upper_lim=100, lower_lim=-100, max_depth=3, max_player=1):
         """
         Create an agent with an AlphaBeta Strategy.
 
@@ -16,12 +16,13 @@ class AlphaBetaAgent:
         :type max_depth: int
         :return: None
         """
-        self.game = game
+#         self.game = game
         self.max = upper_lim
         self.min = lower_lim
         self.max_depth = max_depth
+        self.max_player = max_player
     
-    def alpha_beta(self, depth, s, p, alpha, beta):
+    def alpha_beta(self, depth, game, p, alpha, beta):
         """
         Run alpha beta strategy at the current state.
 
@@ -42,28 +43,28 @@ class AlphaBetaAgent:
         # If we are at the depth we want to search to, 
         # evaluate the current state
         if depth == self.max_depth:
-            return self.game.eval(s)
+            return game.eval(p, 1)
         
         # Get the valid states we can go to from our current state
-        valid_moves = self.game.get_valid_moves(s, p)
+        valid_moves = game.getValidMoves(p)
         if len(valid_moves) == 0:
             # If we have none and we haven't moved past the root
             # return the current state and it's value
-            if depth == 0: return s, self.game.eval(s)
+            if depth == 0: return game, game.eval(p, 1)
             # Otherwise return the value of the current state
-            return self.game.eval(s)
+            return game.eval(p, 1)
         
         # Randomly set an initial best move
         best_move = np.random.choice(valid_moves)
 
-        if p == self.game.p1:
+        if p == self.max_player:
             # the best move for max has the lowest initial value
             best = self.min
             
             # go through each valid move
             for state in valid_moves:
                 # get the value of that move
-                v = self.alpha_beta(depth+1, state, self.game.get_opp(p), 
+                v = self.alpha_beta(depth+1, state, game.get_opp(p), 
                                     alpha, beta)
                 # best move maximizes value
                 best = max(best, v)
@@ -83,7 +84,7 @@ class AlphaBetaAgent:
             # go through each valid move
             for state in valid_moves:
                 # get the value of that move
-                v = self.alpha_beta(depth+1, state, self.game.get_opp(p),
+                v = self.alpha_beta(depth+1, state, game.get_opp(p),
                                     alpha, beta)  
                 # best move minimizes value
                 best = min(best, v)
@@ -105,7 +106,7 @@ class AlphaBetaAgent:
             return best
 
         
-    def find_opt_move(self, player):
+    def find_opt_move(self, game, player):
         """
         Find the optimal move using alpha beta.
 
@@ -117,11 +118,11 @@ class AlphaBetaAgent:
         # start at depth 0 with the current state
         # with the given player's turn to move
         # initially set alpha to be min and beta to be max
-        return self.alpha_beta(0, self.game.state, player, self.min, self.max)
+        return self.alpha_beta(0, game, player, self.min, self.max)
 
 class RandomAgent:
 
-    def __init__(self, game):
+    def __init__(self):
         """
         Create an agent with a Random Strategy.
 
@@ -129,9 +130,9 @@ class RandomAgent:
         :type game: Game (TicTacToe, NineMensMorris)
         :return: None
         """
-        self.game = game
+#         self.game = game
 
-    def find_opt_move(self, player):
+    def find_opt_move(self, game, player):
         """
         Find the optimal move using alpha beta.
 
@@ -141,13 +142,13 @@ class RandomAgent:
         :rtype: string, float
         """
         # Get the agent's valid moves
-        valid_moves = self.game.get_valid_moves(self.game.state, player)
+        valid_moves = game.getValidMoves(player)
         if len(valid_moves) == 0: 
             # If we have no valid moves, use the current state
-            state = self.game.state
+            new_game = game
         else: 
             # Otherwise randomly choose the next state 
-            state = np.random.choice(valid_moves)
+            new_game = np.random.choice(valid_moves)
 
         # Return the next state and its value
-        return state, self.game.eval(state)
+        return new_game, game.eval(player, 1)
