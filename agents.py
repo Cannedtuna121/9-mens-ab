@@ -2,12 +2,12 @@ import numpy as np
 
 class AlphaBetaAgent:
 
-    def __init__(self, upper_lim=100, lower_lim=-100, max_depth=3, max_player=1):
+    def __init__(self, eval, upper_lim=100, lower_lim=-100, max_depth=3, max_player=1):
         """
         Create an agent with an AlphaBeta Strategy.
 
-        :param game: A game object that we can use to get and execute moves
-        :type game: Game (TicTacToe, NineMensMorris)
+        :param eval: The evaluation function used to evaluate a NMM board state in alpha_beta
+        :type eval: function
         :param upper_lim: The maximum value possible in a given game
         :type upper_lim: float
         :param lower_lim: The minimum value possible in a given game
@@ -16,7 +16,8 @@ class AlphaBetaAgent:
         :type max_depth: int
         :return: None
         """
-#         self.game = game
+
+        self.eval = eval
         self.max = upper_lim
         self.min = lower_lim
         self.max_depth = max_depth
@@ -43,16 +44,16 @@ class AlphaBetaAgent:
         # If we are at the depth we want to search to, 
         # evaluate the current state
         if depth == self.max_depth:
-            return game.eval(p, 1)
+            return self.eval(p, 1)
         
         # Get the valid states we can go to from our current state
         valid_moves = game.getValidMoves(p)
         if len(valid_moves) == 0:
             # If we have none and we haven't moved past the root
             # return the current state and it's value
-            if depth == 0: return game, game.eval(p, 1)
+            if depth == 0: return game, self.eval(p, 1)
             # Otherwise return the value of the current state
-            return game.eval(p, 1)
+            return self.eval(p, 1)
         
         # Randomly set an initial best move
         best_move = np.random.choice(valid_moves)
