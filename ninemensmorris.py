@@ -799,10 +799,12 @@ class NineMensMorris:
                    for layer in self.board])
 
     
-    # Evaluates a NMM board state as an integer value
+    # Evaluates a NMM board state as a value. Uses our heurstic.
     # player = the player whos phase we are basing the board state on
     # player_to_max = the player who is MAX
     def eval(self, player, player_to_max):
+        win_result = 1_000_000_000
+        
         if (player_to_max == 1): player_to_min = 2
         else: player_to_min = 1
 
@@ -816,8 +818,8 @@ class NineMensMorris:
                 i = self.minSlidesToMill(player_to_max) - self.minSlidesToMill(player_to_min)
                 result = 4*a + 7*c + 7*g + 2*i
             elif (self.white_phase == 2):
-                if (self.isWin(player_to_max)): result = 1_000_000_000
-                elif (self.isWin(player_to_min)): result = -1_000_000_000
+                if (self.isWin(player_to_max)): result = win_result
+                elif (self.isWin(player_to_min)): result = -win_result
                 else:
                     # result = 3a + 1.5c + 2.5d + 2.5e + 2f + 2g + 4h + 2.5i
                     a = self.millDifference(player_to_max)
@@ -830,8 +832,8 @@ class NineMensMorris:
                     i = self.minSlidesToMill(player_to_max) - self.minSlidesToMill(player_to_min)
                     result = 3*a + 1.5*c + 2.5*d + 2.5*e + 2*f + 2*g + 4*h + 2.5*i
             elif (self.white_phase == 3):
-                if (self.isWin(player_to_max)): result = 1_000_000_000
-                elif (self.isWin(player_to_min)): result = -1_000_000_000
+                if (self.isWin(player_to_max)): result = win_result
+                elif (self.isWin(player_to_min)): result = -win_result
                 else:
                     # result = 3c + 10d + 5j + 2k
                     c = self.num2PieceConfigs(player_to_max) - self.num2PieceConfigs(player_to_min)
@@ -849,8 +851,8 @@ class NineMensMorris:
                 i = self.minSlidesToMill(player_to_max) - self.minSlidesToMill(player_to_min)
                 result = 4*a + 7*c + 7*g + 2*i
             elif (self.black_phase == 2):
-                if (self.isWin(player_to_max)): result = 1_000_000_000
-                elif (self.isWin(player_to_min)): result = -1_000_000_000
+                if (self.isWin(player_to_max)): result = win_result
+                elif (self.isWin(player_to_min)): result = -win_result
                 else:
                     # result = 3a + 1.5c + 2.5d + 2.5e + 2f + 2g + 4h + 2.5i
                     a = self.millDifference(player_to_max)
@@ -863,8 +865,8 @@ class NineMensMorris:
                     i = self.minSlidesToMill(player_to_max) - self.minSlidesToMill(player_to_min)
                     result = 3*a + 1.5*c + 2.5*d + 2.5*e + 2*f + 2*g + 4*h + 2.5*i
             elif (self.black_phase == 3):
-                if (self.isWin(player_to_max)): result = 1_000_000_000
-                elif (self.isWin(player_to_min)): result = -1_000_000_000
+                if (self.isWin(player_to_max)): result = win_result
+                elif (self.isWin(player_to_min)): result = -win_result
                 else:
                     # result = 3c + 10d + 5j + 2k
                     c = self.num2PieceConfigs(player_to_max) - self.num2PieceConfigs(player_to_min)
