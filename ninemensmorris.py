@@ -43,9 +43,11 @@ class NineMensMorris:
 
     def isMill(self, prev, new, player):
         result = False
-        # Create a copy of the board with the piece in location 'prev' removed (if 'prev' is not null)
-        temp_board = np.copy(self.board)
-        if prev != None:
+        # Create a copy of the board with the piece in location 'prev' removed (if 'prev' is not None)
+        if prev == None:
+            temp_board = self.board
+        else:
+            temp_board = np.copy(self.board)
             temp_board[prev[0]][prev[1]] = 0
 
         # cases where 'new' piece is in a corner
