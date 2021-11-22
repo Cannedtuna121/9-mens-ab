@@ -815,6 +815,27 @@ class NineMensMorris:
         return num
     
 
+    # The number of double mills which share a common piece
+    def numDoubleSharedMill(self, player):
+        num = 0
+        # Check double mills which share a corner piece
+        for i in range(3):
+            if (self.board[i][0] == player and self.board[i][1] == player and self.board[i][2] == player
+                and self.board[i][7] == player and self.board[i][6] == player): num += 1
+            if (self.board[i][2] == player and self.board[i][0] == player and self.board[i][1] == player
+                and self.board[i][3] == player and self.board[i][4] == player): num += 1
+            if (self.board[i][4] == player and self.board[i][2] == player and self.board[i][3] == player
+                and self.board[i][5] == player and self.board[i][6] == player): num += 1
+            if (self.board[i][6] == player and self.board[i][0] == player and self.board[i][7] == player
+                and self.board[i][4] == player and self.board[i][5] == player): num += 1
+        # Check double mills which share a non corner piece
+        for i in range(1, 8, 2): # 1,3,5,7
+            if (self.board[0][i] == player and self.board[1][i] == player and self.board[2][i] == player):
+                for j in range(3):
+                    if (self.board[j][i-1] == player and self.board[j][(i+1)%8] == player): num += 1
+        return num
+    
+    
     def numNonOppositeCorners(self, player):
         # For each layer, find the non opp corners and sum 
         return sum([sum([(layer[i] == player and
