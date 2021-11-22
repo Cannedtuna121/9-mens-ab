@@ -921,3 +921,19 @@ class NineMensMorris:
                     result = 3*c + 10*d + 5*j + 2*k
 
         return result
+
+
+    def evalOnlineAlgo(self, player, player_to_max):
+
+        win_result = 1_000_000_000
+        
+        if (player_to_max == 1): player_to_min = 2
+        else: player_to_min = 1
+        if (self.isWin(player_to_max)): result = win_result
+        elif (self.isWin(player_to_min)): result = -win_result
+        else:
+            a = self.numPiecesDifferent(player_to_max)
+            b = len(self.getValidMoves(player_to_max)) - len(self.getValidMoves(player_to_min))
+            c = self.millDifference(player_to_max)
+            result = 3 * a + 1 * c + .1 * b
+        return result
