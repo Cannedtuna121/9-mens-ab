@@ -792,6 +792,28 @@ class NineMensMorris:
                          layer[(i+1)%len(layer)] == player)
                          for i in range(len(layer))])
                    for layer in self.board])
+    
+    
+    # The number of open mills for the player (number of two piece configurations with an opening for mill)
+    def numOpenMills(self, player):
+        num = 0
+        # Check layers of board
+        for i in range(3):
+            for j in range(0, 7, 2): # 0, 2, 4, 6
+                if (self.board[i][j] == player and self.board[i][(j + 1) % 8] == player and self.board[i][(j + 2) % 8] == 0):
+                    num += 1
+                elif (self.board[i][j] == 0 and self.board[i][(j + 1) % 8] == player and self.board[i][(j + 2) % 8] == player):
+                    num += 1
+
+        # Check inward lines: 1, 3, 5, 7
+        for i in range(1, 8, 2):
+            if (self.board[0][i] == player and self.board[1][i] == player and self.board[2][i] == 0):
+                num += 1
+            elif (self.board[0][i] == 0 and self.board[1][i] == player and self.board[2][i] == player):
+                num += 1
+        
+        return num
+    
 
     def numNonOppositeCorners(self, player):
         # For each layer, find the non opp corners and sum 
