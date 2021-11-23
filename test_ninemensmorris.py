@@ -210,3 +210,19 @@ def test_numNonOppositeCorners(board, player, num):
     state = nmm.NineMensMorris()
     state.board = board
     assert state.numNonOppositeCorners(player) == num
+
+@pytest.mark.parametrize(
+        "board, player, pw, pb, num", [
+        ([[1,0,0,0,0,0,1,1], [0,0,0,0,0,0,0,0], [0,0,0,0,0,0,0,0]], 1, 1, 2, 1),
+        ([[2,0,0,0,0,0,2,2], [0,0,0,0,0,0,0,0], [0,0,0,0,0,0,0,0]], 2, 2, 1, 1)
+])
+def test_closedMill(board, player, pw, pb, num):
+    state = nmm.NineMensMorris()
+    state.board = board
+    for i in range(0,3):
+        for j in range(0,8):
+            if (state.board[i][j] == 1):
+                state.white_pieces_on_board += 1
+            elif (state.board[i][j] == 2):
+                state.black_pieces_on_board += 1
+    assert state.closedMill(player, pw, pb) == num
