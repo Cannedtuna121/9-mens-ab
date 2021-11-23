@@ -187,6 +187,7 @@ class HumanAgent:
             playerInput = input().split()
             if (len(playerInput) != 2):
                 print("Invalid Input")
+                continue
             try:
                 playerInput[0] = int(playerInput[0])
                 playerInput[1] = int(playerInput[1])
