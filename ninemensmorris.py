@@ -308,12 +308,11 @@ class NineMensMorris:
 
 
     def isWin(self, player):
-        if (player == 1 and self.white_phase > 1 and self.black_phase > 1):
-            return self.black_pieces_on_board <= 2 or len(self.getValidMoves(2)) == 0
-        elif (player == 1):
-            return False
-        elif (self.white_phase > 1 and self.black_phase > 1):
-            return self.white_pieces_on_board <= 2 or len(self.getValidMoves(1)) == 0
+        (white, black) = self.blockedInWhiteThenBlack()
+        if (self.white_phase > 1 and self.black_phase > 1):
+            if (player == 1):
+                return self.black_pieces_on_board <= 2 or black == self.black_pieces_on_board
+            else: return self.white_pieces_on_board <= 2 or white == self.white_pieces_on_board
         else:
             return False
 
@@ -410,8 +409,8 @@ class NineMensMorris:
         
         return (white_mill_count, black_mill_count)
 
-    # The number of opponents pieces which can't move minus the number of player pieces which can't move
-    def blockedInDifference(self, player):
+    # The number of pieces which can't move
+    def blockedInWhiteThenBlack(self):
         white_blocked_in = 0
         black_blocked_in = 0
         
@@ -441,11 +440,13 @@ class NineMensMorris:
         if (self.black_phase == 3): black_blocked_in = 0
         if (self.white_phase == 3): white_blocked_in = 0
 
-        if (player == 1):
-            return black_blocked_in - white_blocked_in
-        else:
-            return white_blocked_in - black_blocked_in
+        return (white_blocked_in, black_blocked_in)
 
+    # The number of opponents pieces which can't move minus the number of player pieces which can't move
+    def blockedInDifference(self, player):
+        (white, black) = self.blockedInWhiteThenBlack()
+        if player == 1: return black - white
+        else: return white - black
 
     # Helper function for blockedInDifference: returns the number of corner pieces which are blocked in
     # for each player
