@@ -2,7 +2,7 @@ import numpy as np
 
 class AlphaBetaAgent:
 
-    def __init__(self, upper_lim=100, lower_lim=-100, max_depth=3, max_player=1):
+    def __init__(self, upper_lim=100, lower_lim=-100, max_depth=3, max_player=1, weights=None):
         """
         Create an agent with an AlphaBeta Strategy.
 
@@ -14,6 +14,8 @@ class AlphaBetaAgent:
         :type lower_lim: float
         :param max_depth: The maximum depth to search to
         :type max_depth: int
+        :param weights: 2D array of floats with weights
+        :type float array
         :return: None
         """
 #         self.game = game
@@ -21,6 +23,7 @@ class AlphaBetaAgent:
         self.min = lower_lim
         self.max_depth = max_depth
         self.max_player = max_player
+        self.weights = weights
     
     def alpha_beta(self, depth, game, p, alpha, beta):
         """
@@ -43,16 +46,16 @@ class AlphaBetaAgent:
         # If we are at the depth we want to search to, 
         # evaluate the current state
         if depth == self.max_depth:
-            return game.eval(p, 1)
+            return game.eval(p, 1, self.weights)
         
         # Get the valid states we can go to from our current state
         valid_moves = game.getValidMoves(p)
         if len(valid_moves) == 0:
             # If we have none and we haven't moved past the root
             # return the current state and it's value
-            if depth == 0: return game, game.eval(p, 1)
+            if depth == 0: return game, game.eval(p, 1, self.weights)
             # Otherwise return the value of the current state
-            return game.eval(p, 1)
+            return game.eval(p, 1, self.weights)
         
         # Randomly set an initial best move
         best_move = np.random.choice(valid_moves)
@@ -202,7 +205,7 @@ class HumanAgent:
 
 class RandomAgent:
 
-    def __init__(self):
+    def __init__(self, weights):
         """
         Create an agent with a Random Strategy.
 
@@ -211,6 +214,7 @@ class RandomAgent:
         :return: None
         """
 #         self.game = game
+        self.weights = weights
 
     def find_opt_move(self, game, player):
         """
@@ -231,4 +235,4 @@ class RandomAgent:
             new_game = np.random.choice(valid_moves)
 
         # Return the next state and its value
-        return new_game, game.eval(player, 1)
+        return new_game, game.eval(player, 1, self.weights)

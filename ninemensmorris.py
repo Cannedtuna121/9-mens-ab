@@ -848,7 +848,7 @@ class NineMensMorris:
     # Evaluates a NMM board state as a value. Uses our heurstic.
     # player = the player whos phase we are basing the board state on
     # player_to_max = the player who is MAX
-    def eval(self, player, player_to_max):
+    def eval(self, player, player_to_max, weights):
         win_result = 1_000_000_000
         
         if (player_to_max == 1): player_to_min = 2
@@ -862,7 +862,7 @@ class NineMensMorris:
                 c = self.numOpenMills(player_to_max) - self.numOpenMills(player_to_min)
                 g = self.numIntersectionsHeld(player_to_max) - self.numIntersectionsHeld(player_to_min)
                 i = self.minSlidesToMill(player_to_max) - self.minSlidesToMill(player_to_min)
-                result = 4*a + 7*c + 7*g + 2*i
+                result = weights[0][0]*a + weights[0][1]*c + weights[0][2]*g + weights[0][3]*i
             elif (self.white_phase == 2):
                 if (self.isWin(player_to_max)): result = win_result
                 elif (self.isWin(player_to_min)): result = -win_result
@@ -876,7 +876,7 @@ class NineMensMorris:
                     g = self.numIntersectionsHeld(player_to_max) - self.numIntersectionsHeld(player_to_min)
                     h = self.numDoubleMills(player_to_max) - self.numDoubleMills(player_to_min)
                     i = self.minSlidesToMill(player_to_max) - self.minSlidesToMill(player_to_min)
-                    result = 3*a + 1.5*c + 2.5*d + 2.5*e + 2*f + 2*g + 4*h + 2.5*i
+                    result = weights[1][0]*a + weights[1][1]*c + weights[1][2]*d + weights[1][3]*e + weights[1][4]*f + weights[1][5]*g + weights[1][6]*h + weights[1][7]*i
             elif (self.white_phase == 3):
                 if (self.isWin(player_to_max)): result = win_result
                 elif (self.isWin(player_to_min)): result = -win_result
@@ -886,7 +886,7 @@ class NineMensMorris:
                     d = self.numPiecesDifferent(player_to_max)
                     j = self.num3PieceConfigs(player_to_max) - self.num3PieceConfigs(player_to_min)
                     k = self.numNonOppositeCorners(player_to_max)
-                    result = 3*c + 10*d + 5*j + 2*k
+                    result = weights[2][0]*c + weights[2][1]*d + weights[2][2]*j + weights[2][3]*k
         # If player = 2, evaluate the board state from the phase of player 2
         elif (player == 2):
             if (self.black_phase == 1):
@@ -895,7 +895,7 @@ class NineMensMorris:
                 c = self.numOpenMills(player_to_max) - self.numOpenMills(player_to_min)
                 g = self.numIntersectionsHeld(player_to_max) - self.numIntersectionsHeld(player_to_min)
                 i = self.minSlidesToMill(player_to_max) - self.minSlidesToMill(player_to_min)
-                result = 4*a + 7*c + 7*g + 2*i
+                result = weights[0][0]*a + weights[0][1]*c + weights[0][2]*g + weights[0][3]*i
             elif (self.black_phase == 2):
                 if (self.isWin(player_to_max)): result = win_result
                 elif (self.isWin(player_to_min)): result = -win_result
@@ -909,7 +909,7 @@ class NineMensMorris:
                     g = self.numIntersectionsHeld(player_to_max) - self.numIntersectionsHeld(player_to_min)
                     h = self.numDoubleMills(player_to_max) - self.numDoubleMills(player_to_min)
                     i = self.minSlidesToMill(player_to_max) - self.minSlidesToMill(player_to_min)
-                    result = 3*a + 1.5*c + 2.5*d + 2.5*e + 2*f + 2*g + 4*h + 2.5*i
+                    result = weights[1][0]*a + weights[1][1]*c + weights[1][2]*d + weights[1][3]*e + weights[1][4]*f + weights[1][5]*g + weights[1][6]*h + weights[1][7]*i
             elif (self.black_phase == 3):
                 if (self.isWin(player_to_max)): result = win_result
                 elif (self.isWin(player_to_min)): result = -win_result
@@ -919,7 +919,7 @@ class NineMensMorris:
                     d = self.numPiecesDifferent(player_to_max)
                     j = self.num3PieceConfigs(player_to_max) - self.num3PieceConfigs(player_to_min)
                     k = self.numNonOppositeCorners(player_to_max)
-                    result = 3*c + 10*d + 5*j + 2*k
+                    result = weights[2][0]*c + weights[2][1]*d + weights[2][2]*j + weights[2][3]*k
 
         return result
 
@@ -945,7 +945,7 @@ class NineMensMorris:
         elif(self.black_pieces_on_board < old_black_pieces):
             toReturn = -1
         else:
-            toReturn = 0;
+            toReturn = 0
 
         if (player == 1):
             toReturn *= -1
