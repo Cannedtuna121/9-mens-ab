@@ -938,3 +938,16 @@ class NineMensMorris:
             c = self.millDifference(player_to_max)
             result = 3 * a + 1 * c + .1 * b
         return result
+
+    def closedMill(self, player, old_white_pieces, old_black_pieces):
+        if (self.white_pieces_on_board < old_white_pieces):
+            toReturn = 1
+        elif(self.black_pieces_on_board < old_black_pieces):
+            toReturn = -1
+        else:
+            toReturn = 0;
+
+        if (player == 1):
+            toReturn *= -1
+
+        return toReturn
