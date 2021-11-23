@@ -859,7 +859,7 @@ class NineMensMorris:
             if (self.white_phase == 1):
                 # result = 4a + 7c + 7g + 2i
                 a = self.millDifference(player_to_max)
-                c = self.num2PieceConfigs(player_to_max) - self.num2PieceConfigs(player_to_min)
+                c = self.numOpenMills(player_to_max) - self.numOpenMills(player_to_min)
                 g = self.numIntersectionsHeld(player_to_max) - self.numIntersectionsHeld(player_to_min)
                 i = self.minSlidesToMill(player_to_max) - self.minSlidesToMill(player_to_min)
                 result = 4*a + 7*c + 7*g + 2*i
@@ -869,7 +869,7 @@ class NineMensMorris:
                 else:
                     # result = 3a + 1.5c + 2.5d + 2.5e + 2f + 2g + 4h + 2.5i
                     a = self.millDifference(player_to_max)
-                    c = self.num2PieceConfigs(player_to_max) - self.num2PieceConfigs(player_to_min)
+                    c = self.numOpenMills(player_to_max) - self.numOpenMills(player_to_min)
                     d = self.numPiecesDifferent(player_to_max)
                     e = self.blockedInDifference(player_to_max)
                     f = self.spammableMillPiecesDifference(player_to_max)
@@ -882,7 +882,7 @@ class NineMensMorris:
                 elif (self.isWin(player_to_min)): result = -win_result
                 else:
                     # result = 3c + 10d + 5j + 2k
-                    c = self.num2PieceConfigs(player_to_max) - self.num2PieceConfigs(player_to_min)
+                    c = self.numOpenMills(player_to_max) - self.numOpenMills(player_to_min)
                     d = self.numPiecesDifferent(player_to_max)
                     j = self.num3PieceConfigs(player_to_max) - self.num3PieceConfigs(player_to_min)
                     k = self.numNonOppositeCorners(player_to_max)
@@ -892,7 +892,7 @@ class NineMensMorris:
             if (self.black_phase == 1):
                 # result = 4a + 7c + 7g + 2i
                 a = self.millDifference(player_to_max)
-                c = self.num2PieceConfigs(player_to_max) - self.num2PieceConfigs(player_to_min)
+                c = self.numOpenMills(player_to_max) - self.numOpenMills(player_to_min)
                 g = self.numIntersectionsHeld(player_to_max) - self.numIntersectionsHeld(player_to_min)
                 i = self.minSlidesToMill(player_to_max) - self.minSlidesToMill(player_to_min)
                 result = 4*a + 7*c + 7*g + 2*i
@@ -902,7 +902,7 @@ class NineMensMorris:
                 else:
                     # result = 3a + 1.5c + 2.5d + 2.5e + 2f + 2g + 4h + 2.5i
                     a = self.millDifference(player_to_max)
-                    c = self.num2PieceConfigs(player_to_max) - self.num2PieceConfigs(player_to_min)
+                    c = self.numOpenMills(player_to_max) - self.numOpenMills(player_to_min)
                     d = self.numPiecesDifferent(player_to_max)
                     e = self.blockedInDifference(player_to_max)
                     f = self.spammableMillPiecesDifference(player_to_max)
@@ -915,7 +915,7 @@ class NineMensMorris:
                 elif (self.isWin(player_to_min)): result = -win_result
                 else:
                     # result = 3c + 10d + 5j + 2k
-                    c = self.num2PieceConfigs(player_to_max) - self.num2PieceConfigs(player_to_min)
+                    c = self.numOpenMills(player_to_max) - self.numOpenMills(player_to_min)
                     d = self.numPiecesDifferent(player_to_max)
                     j = self.num3PieceConfigs(player_to_max) - self.num3PieceConfigs(player_to_min)
                     k = self.numNonOppositeCorners(player_to_max)
