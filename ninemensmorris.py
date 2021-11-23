@@ -770,20 +770,20 @@ class NineMensMorris:
             #First Layer
             if self.board[0][i] == player:
                 if self.board[0][i+1] == player and self.board[1][i+1] == player: num = num + 1
-                if self.board[0][(i+6)%8] == player and self.board[1][(i+6)%8] == player: num = num + 1
-                if self.board[0][i+1] == player and self.board[0][(i+6)%8] == player: num = num + 1
+                if self.board[0][(i+7)%8] == player and self.board[1][(i+7)%8] == player: num = num + 1
+                if self.board[0][i+1] == player and self.board[0][(i+7)%8] == player: num = num + 1
             #Second Layer
             if self.board[1][i] == player:
                 if self.board[1][i+1] == player and self.board[2][i+1] == player: num = num + 1
-                if self.board[1][(i+6)%8] == player and self.board[2][(i+6)%8] == player: num = num + 1
+                if self.board[1][(i+7)%8] == player and self.board[2][(i+7)%8] == player: num = num + 1
                 if self.board[1][i+1] == player and self.board[0][i+1] == player: num = num + 1
-                if self.board[1][(i+6)%8] == player and self.board[0][(i+6)%8] == player: num = num + 1
-                if self.board[1][i+1] == player and self.board[1][(i+6)%7] == player: num = num + 1
+                if self.board[1][(i+7)%8] == player and self.board[0][(i+7)%8] == player: num = num + 1
+                if self.board[1][i+1] == player and self.board[1][(i+7)%8] == player: num = num + 1
             #Third Layer
             if self.board[2][i] == player:
                 if self.board[2][i+1] == player and self.board[1][i+1] == player: num = num + 1
-                if self.board[2][(i+6)%8] == player and self.board[1][(i+6)%8] == player: num = num + 1
-                if self.board[2][i+1] == player and self.board[2][(i+6)%8] == player: num = num + 1
+                if self.board[2][(i+7)%8] == player and self.board[1][(i+7)%8] == player: num = num + 1
+                if self.board[2][i+1] == player and self.board[2][(i+7)%8] == player: num = num + 1
         return num
     
     def num2PieceConfigs(self, player):
