@@ -924,8 +924,9 @@ class NineMensMorris:
         return result
 
 
-    def evalOnlineAlgo(self, player, player_to_max):
-
+    # Evaluation function from source:
+    # https://github.com/S7uXN37/NineMensMorrisBoard
+    def evalOnlineAlgo1(self, player, player_to_max):
         win_result = 1_000_000_000
         
         if (player_to_max == 1): player_to_min = 2
@@ -939,6 +940,106 @@ class NineMensMorris:
             result = 3 * a + 1 * c + .1 * b
         return result
 
+    # Evaluation function from source:
+    # https://kartikkukreja.wordpress.com/2014/03/17/heuristicevaluation-function-for-nine-mens-morris/
+    def evalOnlineAlgo2(self, player, player_to_max, old_white_pieces, old_black_pieces):
+        if (player_to_max == 1): player_to_min = 2
+        else: player_to_min = 1
+
+        # If player = 1, evaluate the board state from the phase of player 1
+        if (player == 1):
+            if (self.white_phase == 1):
+                a = self.closedMill(player_to_max, old_white_pieces, old_black_pieces)
+                b = self.millDifference(player_to_max)
+                c = self.blockedInDifference(player_to_max)
+                d = self.numPiecesDifferent(player_to_max)
+                e = self.numOpenMills(player_to_max) - self.numOpenMills(player_to_min)
+                f = self.num3PieceConfigs(player_to_max) - self.num3PieceConfigs(player_to_min)
+
+                result = 18 * a + 26 * b + 1 * c + 9 * d + 10 * e + 7 * f
+            elif (self.white_phase == 2):
+                a = self.closedMill(player_to_max, old_white_pieces, old_black_pieces)
+                b = self.millDifference(player_to_max)
+                c = self.blockedInDifference(player_to_max)
+                d = self.numPiecesDifferent(player_to_max)
+                g = self.numDoubleSharedMill(player_to_max) - self.numDoubleSharedMill(player_to_min)
+                h = 0
+                if (self.isWin(player_to_max)): h = 1
+                elif (self.isWin(player_to_min)): h = -1
+
+                result = 14 * a + 43 * b + 10 * c + 11 * d + 8 * g + 1086 * h
+            elif (self.white_phase == 3):
+                a = self.closedMill(player_to_max, old_white_pieces, old_black_pieces)
+                e = self.numOpenMills(player_to_max) - self.numOpenMills(player_to_min)
+                f = self.num3PieceConfigs(player_to_max) - self.num3PieceConfigs(player_to_min)
+                h = 0
+                if (self.isWin(player_to_max)): h = 1
+                elif (self.isWin(player_to_min)): h = -1
+
+                result = 16 * a + 10 * e + 1 * f + 1190 * h
+        # If player = 2, evaluate the board state from the phase of player 2
+        elif (player == 2):
+            if (self.black_phase == 1):
+                a = self.closedMill(player_to_max, old_white_pieces, old_black_pieces)
+                b = self.millDifference(player_to_max)
+                c = self.blockedInDifference(player_to_max)
+                d = self.numPiecesDifferent(player_to_max)
+                e = self.numOpenMills(player_to_max) - self.numOpenMills(player_to_min)
+                f = self.num3PieceConfigs(player_to_max) - self.num3PieceConfigs(player_to_min)
+
+                result = 18 * a + 26 * b + 1 * c + 9 * d + 10 * e + 7 * f
+            elif (self.black_phase == 2):
+                a = self.closedMill(player_to_max, old_white_pieces, old_black_pieces)
+                b = self.millDifference(player_to_max)
+                c = self.blockedInDifference(player_to_max)
+                d = self.numPiecesDifferent(player_to_max)
+                g = self.numDoubleSharedMill(player_to_max) - self.numDoubleSharedMill(player_to_min)
+                h = 0
+                if (self.isWin(player_to_max)): h = 1
+                elif (self.isWin(player_to_min)): h = -1
+
+                result = 14 * a + 43 * b + 10 * c + 11 * d + 8 * g + 1086 * h
+            elif (self.black_phase == 3):
+                a = self.closedMill(player_to_max, old_white_pieces, old_black_pieces)
+                e = self.numOpenMills(player_to_max) - self.numOpenMills(player_to_min)
+                f = self.num3PieceConfigs(player_to_max) - self.num3PieceConfigs(player_to_min)
+                h = 0
+                if (self.isWin(player_to_max)): h = 1
+                elif (self.isWin(player_to_min)): h = -1
+
+                result = 16 * a + 10 * e + 1 * f + 1190 * h
+
+        return result
+
+
+    # Evaluation function from source:
+    # https://jitpaul.blog/2017/07/18/ai-in-nine-men-s-morris-game/
+    def evalOnlineAlgo3(self, player, player_to_max):
+        if (player_to_max == 1): player_to_min = 2
+        else: player_to_min = 1
+
+        # If player = 1, evaluate the board state from the phase of player 1
+        if (player == 1):
+            if (self.white_phase == 1):
+                result = self.numPiecesDifferent(player_to_max)
+            else:
+                if (self.isWin(player_to_max)): result = 10_000
+                elif (self.isWin(player_to_min)): result = -10_000
+                else:
+                    result = 1000 * self.numPiecesDifferent(player_to_max) - len(self.getValidMoves(player_to_min))
+        # If player = 2, evaluate the board state from the phase of player 2
+        elif (player == 2):
+            if (self.black_phase == 1):
+                result = self.numPiecesDifferent(player_to_max)
+            else:
+                if (self.isWin(player_to_max)): result = 10_000
+                elif (self.isWin(player_to_min)): result = -10_000
+                else:
+                    result = 1000 * self.numPiecesDifferent(player_to_max) - len(self.getValidMoves(player_to_min))
+
+        return result
+
+    
     def closedMill(self, player, old_white_pieces, old_black_pieces):
         if (self.white_pieces_on_board < old_white_pieces):
             toReturn = 1
