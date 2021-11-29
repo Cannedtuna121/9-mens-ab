@@ -848,7 +848,9 @@ class NineMensMorris:
     # Evaluates a NMM board state as a value. Uses our heurstic.
     # player = the player whos phase we are basing the board state on
     # player_to_max = the player who is MAX
-    def eval(self, player, player_to_max, strategy=None, weights=None):
+    def eval(self, player, player_to_max, strategy=None, weights=[[1,1,1,1],
+                                                                  [1,1,1,1,1,1,1,1],
+                                                                  [1,1,1,1]]):
         win_result = 1_000_000_000
         
         if (player_to_max == 1): player_to_min = 2
@@ -862,7 +864,7 @@ class NineMensMorris:
                 c = self.numOpenMills(player_to_max) - self.numOpenMills(player_to_min)
                 g = self.numIntersectionsHeld(player_to_max) - self.numIntersectionsHeld(player_to_min)
                 i = self.minSlidesToMill(player_to_max) - self.minSlidesToMill(player_to_min)
-                result = 4*a + 7*c + 7*g + 2*i
+                result = weights[0][0]*a + weights[0][1]*c + weights[0][2]*g + weights[0][3]*i
             elif (self.white_phase == 2):
                 if (self.isWin(player_to_max)): result = win_result
                 elif (self.isWin(player_to_min)): result = -win_result
@@ -876,7 +878,7 @@ class NineMensMorris:
                     g = self.numIntersectionsHeld(player_to_max) - self.numIntersectionsHeld(player_to_min)
                     h = self.numDoubleMills(player_to_max) - self.numDoubleMills(player_to_min)
                     i = self.minSlidesToMill(player_to_max) - self.minSlidesToMill(player_to_min)
-                    result = 3*a + 1.5*c + 2.5*d + 2.5*e + 2*f + 2*g + 4*h + 2.5*i
+                    result = weights[1][0]*a + weights[1][1]*c + weights[1][2]*d + weights[1][3]*e + weights[1][4]*f + weights[1][5]*g + weights[1][6]*h + weights[1][7]*i
             elif (self.white_phase == 3):
                 if (self.isWin(player_to_max)): result = win_result
                 elif (self.isWin(player_to_min)): result = -win_result
@@ -886,7 +888,7 @@ class NineMensMorris:
                     d = self.numPiecesDifferent(player_to_max)
                     j = self.num3PieceConfigs(player_to_max) - self.num3PieceConfigs(player_to_min)
                     k = self.numNonOppositeCorners(player_to_max)
-                    result = 3*c + 10*d + 5*j + 2*k
+                    result = weights[2][0]*c + weights[2][1]*d + weights[2][2]*j + weights[2][3]*k
         # If player = 2, evaluate the board state from the phase of player 2
         elif (player == 2):
             if (self.black_phase == 1):
@@ -895,7 +897,7 @@ class NineMensMorris:
                 c = self.numOpenMills(player_to_max) - self.numOpenMills(player_to_min)
                 g = self.numIntersectionsHeld(player_to_max) - self.numIntersectionsHeld(player_to_min)
                 i = self.minSlidesToMill(player_to_max) - self.minSlidesToMill(player_to_min)
-                result = 4*a + 7*c + 7*g + 2*i
+                result = weights[0][0]*a + weights[0][1]*c + weights[0][2]*g + weights[0][3]*i
             elif (self.black_phase == 2):
                 if (self.isWin(player_to_max)): result = win_result
                 elif (self.isWin(player_to_min)): result = -win_result
@@ -909,7 +911,7 @@ class NineMensMorris:
                     g = self.numIntersectionsHeld(player_to_max) - self.numIntersectionsHeld(player_to_min)
                     h = self.numDoubleMills(player_to_max) - self.numDoubleMills(player_to_min)
                     i = self.minSlidesToMill(player_to_max) - self.minSlidesToMill(player_to_min)
-                    result = 3*a + 1.5*c + 2.5*d + 2.5*e + 2*f + 2*g + 4*h + 2.5*i
+                    result = weights[1][0]*a + weights[1][1]*c + weights[1][2]*d + weights[1][3]*e + weights[1][4]*f + weights[1][5]*g + weights[1][6]*h + weights[1][7]*i
             elif (self.black_phase == 3):
                 if (self.isWin(player_to_max)): result = win_result
                 elif (self.isWin(player_to_min)): result = -win_result
@@ -919,13 +921,14 @@ class NineMensMorris:
                     d = self.numPiecesDifferent(player_to_max)
                     j = self.num3PieceConfigs(player_to_max) - self.num3PieceConfigs(player_to_min)
                     k = self.numNonOppositeCorners(player_to_max)
-                    result = 3*c + 10*d + 5*j + 2*k
+                    result = weights[2][0]*c + weights[2][1]*d + weights[2][2]*j + weights[2][3]*k
 
         return result
 
 
-    def evalOnlineAlgo(self, player, player_to_max):
-
+    # Evaluation function from source:
+    # https://github.com/S7uXN37/NineMensMorrisBoard
+    def evalOnlineAlgo1(self, player, player_to_max):
         win_result = 1_000_000_000
         
         if (player_to_max == 1): player_to_min = 2
@@ -939,13 +942,113 @@ class NineMensMorris:
             result = 3 * a + 1 * c + .1 * b
         return result
 
+    # Evaluation function from source:
+    # https://kartikkukreja.wordpress.com/2014/03/17/heuristicevaluation-function-for-nine-mens-morris/
+    def evalOnlineAlgo2(self, player, player_to_max, old_white_pieces, old_black_pieces):
+        if (player_to_max == 1): player_to_min = 2
+        else: player_to_min = 1
+
+        # If player = 1, evaluate the board state from the phase of player 1
+        if (player == 1):
+            if (self.white_phase == 1):
+                a = self.closedMill(player_to_max, old_white_pieces, old_black_pieces)
+                b = self.millDifference(player_to_max)
+                c = self.blockedInDifference(player_to_max)
+                d = self.numPiecesDifferent(player_to_max)
+                e = self.numOpenMills(player_to_max) - self.numOpenMills(player_to_min)
+                f = self.num3PieceConfigs(player_to_max) - self.num3PieceConfigs(player_to_min)
+
+                result = 18 * a + 26 * b + 1 * c + 9 * d + 10 * e + 7 * f
+            elif (self.white_phase == 2):
+                a = self.closedMill(player_to_max, old_white_pieces, old_black_pieces)
+                b = self.millDifference(player_to_max)
+                c = self.blockedInDifference(player_to_max)
+                d = self.numPiecesDifferent(player_to_max)
+                g = self.numDoubleSharedMill(player_to_max) - self.numDoubleSharedMill(player_to_min)
+                h = 0
+                if (self.isWin(player_to_max)): h = 1
+                elif (self.isWin(player_to_min)): h = -1
+
+                result = 14 * a + 43 * b + 10 * c + 11 * d + 8 * g + 1086 * h
+            elif (self.white_phase == 3):
+                a = self.closedMill(player_to_max, old_white_pieces, old_black_pieces)
+                e = self.numOpenMills(player_to_max) - self.numOpenMills(player_to_min)
+                f = self.num3PieceConfigs(player_to_max) - self.num3PieceConfigs(player_to_min)
+                h = 0
+                if (self.isWin(player_to_max)): h = 1
+                elif (self.isWin(player_to_min)): h = -1
+
+                result = 16 * a + 10 * e + 1 * f + 1190 * h
+        # If player = 2, evaluate the board state from the phase of player 2
+        elif (player == 2):
+            if (self.black_phase == 1):
+                a = self.closedMill(player_to_max, old_white_pieces, old_black_pieces)
+                b = self.millDifference(player_to_max)
+                c = self.blockedInDifference(player_to_max)
+                d = self.numPiecesDifferent(player_to_max)
+                e = self.numOpenMills(player_to_max) - self.numOpenMills(player_to_min)
+                f = self.num3PieceConfigs(player_to_max) - self.num3PieceConfigs(player_to_min)
+
+                result = 18 * a + 26 * b + 1 * c + 9 * d + 10 * e + 7 * f
+            elif (self.black_phase == 2):
+                a = self.closedMill(player_to_max, old_white_pieces, old_black_pieces)
+                b = self.millDifference(player_to_max)
+                c = self.blockedInDifference(player_to_max)
+                d = self.numPiecesDifferent(player_to_max)
+                g = self.numDoubleSharedMill(player_to_max) - self.numDoubleSharedMill(player_to_min)
+                h = 0
+                if (self.isWin(player_to_max)): h = 1
+                elif (self.isWin(player_to_min)): h = -1
+
+                result = 14 * a + 43 * b + 10 * c + 11 * d + 8 * g + 1086 * h
+            elif (self.black_phase == 3):
+                a = self.closedMill(player_to_max, old_white_pieces, old_black_pieces)
+                e = self.numOpenMills(player_to_max) - self.numOpenMills(player_to_min)
+                f = self.num3PieceConfigs(player_to_max) - self.num3PieceConfigs(player_to_min)
+                h = 0
+                if (self.isWin(player_to_max)): h = 1
+                elif (self.isWin(player_to_min)): h = -1
+
+                result = 16 * a + 10 * e + 1 * f + 1190 * h
+
+        return result
+
+
+    # Evaluation function from source:
+    # https://jitpaul.blog/2017/07/18/ai-in-nine-men-s-morris-game/
+    def evalOnlineAlgo3(self, player, player_to_max):
+        if (player_to_max == 1): player_to_min = 2
+        else: player_to_min = 1
+
+        # If player = 1, evaluate the board state from the phase of player 1
+        if (player == 1):
+            if (self.white_phase == 1):
+                result = self.numPiecesDifferent(player_to_max)
+            else:
+                if (self.isWin(player_to_max)): result = 10_000
+                elif (self.isWin(player_to_min)): result = -10_000
+                else:
+                    result = 1000 * self.numPiecesDifferent(player_to_max) - len(self.getValidMoves(player_to_min))
+        # If player = 2, evaluate the board state from the phase of player 2
+        elif (player == 2):
+            if (self.black_phase == 1):
+                result = self.numPiecesDifferent(player_to_max)
+            else:
+                if (self.isWin(player_to_max)): result = 10_000
+                elif (self.isWin(player_to_min)): result = -10_000
+                else:
+                    result = 1000 * self.numPiecesDifferent(player_to_max) - len(self.getValidMoves(player_to_min))
+
+        return result
+
+    
     def closedMill(self, player, old_white_pieces, old_black_pieces):
         if (self.white_pieces_on_board < old_white_pieces):
             toReturn = 1
         elif(self.black_pieces_on_board < old_black_pieces):
             toReturn = -1
         else:
-            toReturn = 0;
+            toReturn = 0
 
         if (player == 1):
             toReturn *= -1

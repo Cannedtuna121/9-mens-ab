@@ -2,6 +2,7 @@ import numpy as np
 
 class AlphaBetaAgent:
 
+
     def __init__(self, upper_lim=100, lower_lim=-100, max_depth=3, 
                  max_player=1, strategy='open_wins', weights=[]):
         """
@@ -17,11 +18,10 @@ class AlphaBetaAgent:
         :type max_player: implementation dependent (int, str, ...)
         :param strategy: Strategy to use to evaluate the game state
         :type strategy: str
-        :weights: Weights for use by eval strategy
-        :type weights: list(float)
+        :param weights: Weights for use by eval strategy
+        :type weights: list(float) or 2D Array
         :return: None
         """
-#         self.game = game
         self.max = upper_lim
         self.min = lower_lim
         self.max_depth = max_depth
@@ -50,13 +50,14 @@ class AlphaBetaAgent:
         # If we are at the depth we want to search to, 
         # evaluate the current state
         if depth == self.max_depth:
-            return game.eval(p, 1)
+            return game.eval(p, 1, self.weights)
         
         # Get the valid states we can go to from our current state
         valid_moves = game.getValidMoves(p)
         if len(valid_moves) == 0:
             # If we have none and we haven't moved past the root
             # return the current state and it's value
+
             if depth == 0: return game, game.eval(p, 1, self.strategy, self.weights)
             # Otherwise return the value of the current state
             return game.eval(p, 1, self.strategy, self.weights)
@@ -212,12 +213,9 @@ class RandomAgent:
     def __init__(self):
         """
         Create an agent with a Random Strategy.
-
-        :param game: A game object that we can use to get and execute moves
-        :type game: Game (TicTacToe, NineMensMorris)
         :return: None
         """
-#         self.game = game
+        return None
 
     def find_opt_move(self, game, player):
         """
@@ -238,4 +236,4 @@ class RandomAgent:
             new_game = np.random.choice(valid_moves)
 
         # Return the next state and its value
-        return new_game, game.eval(player, 1)
+        return new_game, 0
