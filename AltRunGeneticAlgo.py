@@ -1,6 +1,6 @@
-import GeneticAlgo
+import AltGeneticAlgo
 
-GeneticAlgo.run_genetic_algorithm(num_genes=16,
+AltGeneticAlgo.run_genetic_algorithm(num_genes=16,
                                 strategy=None,
                                 opp_strategy=None, 
                                 opp_weights=[
