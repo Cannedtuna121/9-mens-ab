@@ -2,18 +2,23 @@ import numpy as np
 
 class AlphaBetaAgent:
 
-    def __init__(self, upper_lim=100, lower_lim=-100, max_depth=3, max_player=1):
+    def __init__(self, upper_lim=100, lower_lim=-100, max_depth=3, 
+                 max_player=1, strategy='open_wins', weights=[]):
         """
         Create an agent with an AlphaBeta Strategy.
 
-        :param game: A game object that we can use to get and execute moves
-        :type game: Game (TicTacToe, NineMensMorris)
         :param upper_lim: The maximum value possible in a given game
         :type upper_lim: float
         :param lower_lim: The minimum value possible in a given game
         :type lower_lim: float
         :param max_depth: The maximum depth to search to
         :type max_depth: int
+        :param max_player: The player that is aiming to maximize the score
+        :type max_player: implementation dependent (int, str, ...)
+        :param strategy: Strategy to use to evaluate the game state
+        :type strategy: str
+        :weights: Weights for use by eval strategy
+        :type weights: list(float)
         :return: None
         """
 #         self.game = game
@@ -21,6 +26,8 @@ class AlphaBetaAgent:
         self.min = lower_lim
         self.max_depth = max_depth
         self.max_player = max_player
+        self.strategy = strategy
+        self.weights = weights
     
     def alpha_beta(self, depth, game, p, alpha, beta):
         """
@@ -50,9 +57,9 @@ class AlphaBetaAgent:
         if len(valid_moves) == 0:
             # If we have none and we haven't moved past the root
             # return the current state and it's value
-            if depth == 0: return game, game.eval(p, 1)
+            if depth == 0: return game, game.eval(p, 1, self.strategy, self.weights)
             # Otherwise return the value of the current state
-            return game.eval(p, 1)
+            return game.eval(p, 1, self.strategy, self.weights)
         
         # Randomly set an initial best move
         best_move = np.random.choice(valid_moves)
