@@ -848,7 +848,9 @@ class NineMensMorris:
     # Evaluates a NMM board state as a value. Uses our heurstic.
     # player = the player whos phase we are basing the board state on
     # player_to_max = the player who is MAX
-    def eval(self, player, player_to_max, weights):
+    def eval(self, player, player_to_max, strategy=None, weights=[[1,1,1,1],
+                                                                  [1,1,1,1,1,1,1,1],
+                                                                  [1,1,1,1]]):
         win_result = 1_000_000_000
         
         if (player_to_max == 1): player_to_min = 2
