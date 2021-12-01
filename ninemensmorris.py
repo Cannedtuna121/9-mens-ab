@@ -23,6 +23,8 @@ class NineMensMorris:
         self.white_phase = 1
         self.black_phase = 1
         
+        self.prev_nmm = None
+        
         self.get_opp = lambda p: (p%2 + 1)
 
     # Function to help with debugging, prints a visual representation of the board
@@ -120,6 +122,7 @@ class NineMensMorris:
             temp.black_pieces_avail = self.black_pieces_avail
             temp.white_phase = self.white_phase
             temp.black_phase = self.black_phase
+            temp.prev_nmm = self
             return temp
     
     def move(self, prev, new, remove, player):
@@ -852,6 +855,10 @@ class NineMensMorris:
                                                                   [1,1,1,1,1,1,1,1],
                                                                   [1,1,1,1]]):
         win_result = 1_000_000_000
+        
+        if (strategy == 'online_alg1'): return self.evalOnlineAlgo1(player, player_to_max)
+        elif (strategy == 'online_alg2'): return self.evalOnlineAlgo2(player, player_to_max, self.prev_nmm.white_pieces_on_board, self.prev_nmm.black_pieces_on_board)
+        elif (strategy == 'online_alg3'): return self.evalOnlineAlgo3(player, player_to_max)
         
         if (player_to_max == 1): player_to_min = 2
         else: player_to_min = 1
