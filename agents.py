@@ -50,7 +50,7 @@ class AlphaBetaAgent:
         # If we are at the depth we want to search to, 
         # evaluate the current state
         if depth == self.max_depth:
-            return game.eval(p, 1, self.weights)
+            return game.eval(p, 1, self.strategy, self.weights)
         
         # Get the valid states we can go to from our current state
         valid_moves = game.getValidMoves(p)

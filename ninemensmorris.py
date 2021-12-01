@@ -24,6 +24,8 @@ class NineMensMorris:
         self.black_phase = 1
         
         self.get_opp = lambda p: (p%2 + 1)
+        self.p1 = 1
+        self.p2 = 2
 
     # Function to help with debugging, prints a visual representation of the board
     def printBoard(self):
