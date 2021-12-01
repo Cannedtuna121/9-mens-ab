@@ -237,3 +237,129 @@ class RandomAgent:
 
         # Return the next state and its value
         return new_game, 0
+    
+    
+    class OnlineEval2AlphaBeta:
+
+
+    def __init__(self, upper_lim=100, lower_lim=-100, max_depth=3, 
+                 max_player=1, strategy='open_wins', weights=[]):
+        """
+        Create an agent with an AlphaBeta Strategy.
+        :param upper_lim: The maximum value possible in a given game
+        :type upper_lim: float
+        :param lower_lim: The minimum value possible in a given game
+        :type lower_lim: float
+        :param max_depth: The maximum depth to search to
+        :type max_depth: int
+        :param max_player: The player that is aiming to maximize the score
+        :type max_player: implementation dependent (int, str, ...)
+        :param strategy: Strategy to use to evaluate the game state
+        :type strategy: str
+        :param weights: Weights for use by eval strategy
+        :type weights: list(float) or 2D Array
+        :return: None
+        """
+        self.max = upper_lim
+        self.min = lower_lim
+        self.max_depth = max_depth
+        self.max_player = max_player
+        self.strategy = strategy
+        self.weights = weights
+    
+    def alpha_beta(self, depth, game, p, alpha, beta):
+        """
+        Run alpha beta strategy at the current state.
+        :param depth: current depth
+        :type depth: int
+        :param s: current state
+        :type s: string (flexible)
+        :param p: current player
+        :type p: string (flexible)
+        :param alpha: current value of alpha
+        :type alpha: float
+        :param beta: current value of beta
+        :type beta: float
+        :return: either the best move and its value at depth max_depth
+                 or just the value at max_depth if an interior or leaf node
+        :rtype: (string, float) or float
+        """
+        # If we are at the depth we want to search to, 
+        # evaluate the current state
+        if depth == self.max_depth:
+            return game.evalOnlineAlgo2(p, 1, old_white_pieces, old_black_pieces)
+        
+        # Get the valid states we can go to from our current state
+        valid_moves = game.getValidMoves(p)
+        if len(valid_moves) == 0:
+            # If we have none and we haven't moved past the root
+            # return the current state and it's value
+
+            if depth == 0: return game, game.evalOnlineAlgo2(p, 1, old_white_pieces, old_black_pieces)
+            # Otherwise return the value of the current state
+            return game.evalOnlineAlgo2(p, 1, old_white_pieces, old_black_pieces)
+        
+        # Randomly set an initial best move
+        best_move = np.random.choice(valid_moves)
+
+        if p == self.max_player:
+            # the best move for max has the lowest initial value
+            best = self.min
+            
+            # go through each valid move
+            for state in valid_moves:
+                # get the value of that move
+                v = self.alpha_beta(depth+1, state, game.get_opp(p), 
+                                    alpha, beta)
+                # best move maximizes value
+                best = max(best, v)
+
+                # alpha and best move are updated - alpha maximizes value
+                if best > alpha:
+                    best_move = state
+                    alpha = best
+                
+                # alpha cutoff
+                if beta <= alpha:
+                    break
+        else:
+            # the best move for min has the highest initial value
+            best = self.max
+
+            # go through each valid move
+            for state in valid_moves:
+                # get the value of that move
+                v = self.alpha_beta(depth+1, state, game.get_opp(p),
+                                    alpha, beta)  
+                # best move minimizes value
+                best = min(best, v)
+
+                # beta and best move are updated - alpha maximizes value
+                if best < beta:
+                    best_move = state
+                    beta = best
+
+                # beta cutoff
+                if beta <= alpha:
+                    break
+
+        # find_opt_move should get both the best move and its value        
+        if depth == 0:
+            return best_move, best
+        else:
+            # alpha beta only needs the best value
+            return best
+
+        
+    def find_opt_move(self, game, player):
+        """
+        Find the optimal move using alpha beta.
+        :param player: player that is making the move in the current game state
+        :type player: string (flexible)
+        :return: best move and its predicted value
+        :rtype: string, float
+        """
+        # start at depth 0 with the current state
+        # with the given player's turn to move
+        # initially set alpha to be min and beta to be max
+        return self.alpha_beta(0, game, player, self.min, self.max)
